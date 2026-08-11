@@ -37,6 +37,6 @@ test("news route synchronizes articles from nabaden.vn", async () => {
   assert.match(route, /s-maxage=900/);
   assert.match(route, /\/tin-tuc\/\$\{article\.id\}\//);
   assert.match(page, /fetch\("\/api\/news"/);
-  assert.match(page, /Tự động cập nhật từ nabaden\.vn/);
   assert.match(page, /fallbackStories/);
+  assert.doesNotMatch(page, /Tự động cập nhật|Đang cập nhật|news-sync/);
 });

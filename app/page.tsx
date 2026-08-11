@@ -157,8 +157,6 @@ export default function Home() {
   const [toast, setToast] = useState("");
   const [online, setOnline] = useState(true);
   const [stories, setStories] = useState<NewsStory[]>(fallbackStories);
-  const [newsSyncing, setNewsSyncing] = useState(true);
-  const [newsSynced, setNewsSynced] = useState(false);
 
   useEffect(() => {
     const requestedTab = new URLSearchParams(window.location.search).get("tab");
@@ -221,13 +219,9 @@ export default function Home() {
         return response.json() as Promise<{ articles: NewsStory[] }>;
       })
       .then(({ articles }) => {
-        if (articles.length) {
-          setStories(articles);
-          setNewsSynced(true);
-        }
+        if (articles.length) setStories(articles);
       })
-      .catch(() => setNewsSynced(false))
-      .finally(() => setNewsSyncing(false));
+      .catch(() => undefined);
     return () => controller.abort();
   }, []);
 
@@ -518,10 +512,6 @@ export default function Home() {
         {tab === "news" && (
           <>
             <PageIntro eyebrow="Kiến thức & tin tức" title="Chuyện từ vùng mãng cầu" text="Hiểu sản phẩm, mùa vụ và những hoạt động đang diễn ra tại NABADEN." />
-            <div className={`news-sync ${newsSynced ? "synced" : ""}`}>
-              <span>{newsSyncing ? "↻" : newsSynced ? "✓" : "i"}</span>
-              <p>{newsSyncing ? "Đang cập nhật bài viết mới…" : newsSynced ? "Tự động cập nhật từ nabaden.vn" : "Đang hiển thị các bài viết gần nhất"}</p>
-            </div>
             <div className="news-list">
               {stories.map((story, index) => (
                 <a href={story.href} target="_blank" rel="noreferrer" className={index === 0 ? "news-card large" : "news-card"} key={story.id}>
@@ -544,7 +534,7 @@ export default function Home() {
             </section>
             <div className="contact-list">
               <a href="https://maps.app.goo.gl/r8JkWUTPksY2CjsB7"><span>⌖</span><div><b>Địa chỉ vườn</b><small>Lộ 10, ấp Thạnh Trung, Phường Bình Minh, Tây Ninh</small></div><i>›</i></a>
-              <a href="https://www.facebook.com/nabaden.vn/"><span>f</span><div><b>Facebook NABADEN</b><small>Cập nhật hình ảnh và hoạt động</small></div><i>›</i></a>
+              <a href="https://www.facebook.com/nabaden.vn/"><span>f</span><div><b>Facebook NABADEN</b></div><i>›</i></a>
               <a href="https://www.tiktok.com/@mangcaubaden"><span>♪</span><div><b>TikTok @mangcaubaden</b><small>Video từ vườn và sản phẩm</small></div><i>›</i></a>
               <button onClick={shareApp}><span>↗</span><div><b>Chia sẻ ứng dụng</b><small>Gửi NABADEN cho bạn bè</small></div><i>›</i></button>
               <button onClick={requestInstall}><span>＋</span><div><b>Cài lên màn hình chính</b><small>Mở nhanh như một ứng dụng</small></div><i>›</i></button>
@@ -590,7 +580,7 @@ export default function Home() {
           </div>
           <div className="zalo-guide"><b>1</b><span>Sao chép nội dung</span><i>→</i><b>2</b><span>Mở Zalo OA</span><i>→</i><b>3</b><span>Dán và gửi</span></div>
           <a className="zalo-consult-button" href={ZALO_OA_URL} target="_blank" rel="noreferrer" onClick={() => void copyConsultationMessage()}>
-            <span>Zalo</span><div><b>Tư vấn qua Zalo OA</b><small>Tin nhắn được sao chép tự động</small></div><i>→</i>
+            <span>Zalo</span><div><b>Tư vấn qua Zalo OA</b></div><i>→</i>
           </a>
         </Modal>
       )}
