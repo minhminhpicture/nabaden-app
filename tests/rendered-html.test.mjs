@@ -24,6 +24,7 @@ test("server-renders the NABADEN mobile app", async () => {
   assert.match(html, /Mãng cầu Bà Đen/);
   assert.match(html, /Tin tức/);
   assert.match(html, /Trải nghiệm/);
+  assert.match(html, /<a href="https:\/\/mangcaubaden\.vn">Mãng cầu Bà Đen<\/a>/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
 });
 

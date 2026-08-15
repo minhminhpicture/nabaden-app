@@ -392,7 +392,7 @@ export default function Home() {
               <div className="hero-shade" />
               <div className="hero-content">
                 <span className="eyebrow light">Từ vùng nguyên liệu Tây Ninh</span>
-                <h1>Mãng cầu Bà Đen<br />chính gốc.</h1>
+                <h1><a href="https://mangcaubaden.vn">Mãng cầu Bà Đen</a><br />chính gốc.</h1>
                 <p>Vùng trồng thật · Chế biến thật · OCOP 3 sao</p>
                 <button onClick={() => changeTab("products")}>Khám phá sản phẩm <b>→</b></button>
               </div>
