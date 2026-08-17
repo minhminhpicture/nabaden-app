@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
-type TabId = "home" | "products" | "experience" | "news" | "contact";
+type TabId = "home" | "products" | "partner" | "experience" | "news" | "contact";
 type InstallEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
@@ -19,68 +19,154 @@ type NewsStory = {
 
 const ZALO_OA_URL = "https://zalo.me/2227000692046430780";
 const PARTNER_ZALO_URL = "https://zalo.me/2227000692046430780?open_type=p&open_form=4fac32860ec3e79dbed2";
+const HOTLINE_PHONE = "0907215521";
+const HOTLINE_DISPLAY = "0907 215 521";
 
 const products = [
   {
-    id: "fresh",
-    name: "Mãng cầu Bà Đen tươi",
+    id: "hop-3-trai",
+    name: "Hộp Đặc Biệt (3 Quả)",
+    tag: "OCOP 3★ · Quà Biếu VIP",
     category: "Tươi",
-    image: "/assets/product-gift-box.jpg",
-    note: "Theo mùa vụ",
-    description: "Trái tươi chính gốc Tây Ninh, tư vấn độ chín và đóng gói theo nhu cầu.",
+    image: "/assets/hop-qua-3-trai-vip-nabaden.jpg",
+    note: "Tuyển chọn thượng hạng",
+    description: "Hộp quà quai xách kính trong suốt, tuyển chọn 3 trái thượng hạng, lót rơm giấy & xốp lưới sang trọng.",
     ocop: true,
+    sku: "MCBD-VIP-03",
+    target: "Quà biếu VIP, đối tác, sự kiện, dâng lễ",
+    pack: "Hộp quai xách cao cấp, ô kính trong, lót rơm & xốp lưới",
+    fruitSpec: "Trái tuyển chọn đỉnh chóp, quả tròn đều mã sáng",
+    shipPolicy: "Giao hỏa tốc hoặc gửi theo yêu cầu",
   },
   {
-    id: "wine",
+    id: "thung-5kg",
+    name: "Thùng 5KG Tuyển Chọn",
+    tag: "OCOP 3★ · Biếu Tặng Gia Đình",
+    category: "Tươi",
+    image: "/assets/thung-5kg-nabaden.jpg",
+    note: "Trái già loại 1 · Bọc lưới",
+    description: "Thùng carton 5kg chuyên dụng, từng trái già loại 1 bọc lưới xốp chống va đập, vị ngọt thanh tự nhiên sau 1-2 ngày.",
+    ocop: true,
+    sku: "MCBD-THUNG-05KG",
+    target: "Thưởng thức gia đình, biếu người thân bạn bè",
+    pack: "Thùng carton 5kg chuyên dụng, bọc lưới xốp từng trái",
+    fruitSpec: "Trái già loại 1, mắt nở đều, ngọt thanh dẻo dai",
+    shipPolicy: "Giao nhanh trong ngày hoặc gửi liên tỉnh",
+  },
+  {
+    id: "thung-15kg",
+    name: "Thùng 15KG Tuyển Chọn",
+    tag: "OCOP 3★ · Đơn Sỉ Toàn Quốc",
+    category: "Tươi",
+    image: "/assets/thung-15kg-nabaden.jpg",
+    note: "Giá sỉ tận vườn · Thùng 3-5 lớp",
+    description: "Thùng carton 3-5 lớp dày dặn chịu lực, lỗ thoáng khí chống hấp hơi, tối ưu gửi xe khách & máy bay toàn quốc.",
+    ocop: true,
+    sku: "MCBD-THUNG-15KG",
+    target: "Khách mua sỉ, đại lý trái cây sạch, gửi xa",
+    pack: "Thùng carton 3-5 lớp dày dặn, lỗ thoáng khí chống hấp hơi",
+    fruitSpec: "Trái già đều ngày, phân loại chuẩn kích cỡ",
+    shipPolicy: "Gửi xe khách, chành xe, máy bay toàn quốc",
+  },
+  {
+    id: "ruou-mang-cau",
     name: "Rượu từ mãng cầu",
+    tag: "Chế Biến Tự Nhiên",
     category: "Chế biến",
     image: "/assets/product-wine.jpg",
-    note: "Liên hệ thông tin",
-    description: "Sản phẩm chế biến dành cho khách hàng và đối tác quan tâm.",
+    note: "Lên men tự nhiên",
+    description: "Hương vị nồng nàn đặc trưng từ mãng cầu Bà Đen Tây Ninh, lên men tự nhiên làm quà biếu độc đáo.",
+    ocop: false,
+    sku: "MCBD-RUOU-01",
+    target: "Thưởng thức, quà biếu đặc sản địa phương",
+    pack: "Chai thủy tinh cao cấp, đóng hộp quà",
+    fruitSpec: "Lên men từ mãng cầu chín chuẩn độ ngọt",
+    shipPolicy: "Đóng gói chống sốc gửi toàn quốc",
   },
   {
-    id: "dried",
-    name: "Mãng cầu sấy",
+    id: "mang-cau-say",
+    name: "Mãng cầu sấy dẻo",
+    tag: "Đặc Sản Tiện Lợi",
     category: "Chế biến",
     image: "/assets/product-dried.jpg",
-    note: "Tiện lợi · Dễ mang theo",
-    description: "Phù hợp nhu cầu quà tặng, thưởng thức và phân phối.",
+    note: "Dẻo dai · Tiện lợi",
+    description: "Giữ trọn vị ngọt thanh chua dịu tự nhiên của mãng cầu Bà Đen, bao bì nhỏ gọn dễ mang theo khi đi xa.",
+    ocop: false,
+    sku: "MCBD-SAY-01",
+    target: "Ăn vặt gia đình, làm quà du lịch tiện lợi",
+    pack: "Túi zip / Hộp kín bảo quản tiện lợi",
+    fruitSpec: "Thịt mãng cầu tuyển chọn tách hạt sấy dẻo",
+    shipPolicy: "Giao nhanh toàn quốc",
   },
   {
-    id: "gift",
+    id: "set-qua",
     name: "Set quà NABADEN",
+    tag: "Quà Tặng Doanh Nghiệp",
     category: "Quà tặng",
     image: "/assets/product-gift-set.jpg",
-    note: "Theo số lượng",
-    description: "Cấu hình quà doanh nghiệp và dịp đặc biệt theo nhu cầu thực tế.",
+    note: "Theo yêu cầu",
+    description: "Cấu hình set quà đặc sản sang trọng kết hợp quả tươi OCOP và sản phẩm chế biến cho doanh nghiệp và sự kiện.",
+    ocop: false,
+    sku: "MCBD-SET-QUA",
+    target: "Quà tặng doanh nghiệp, đối tác, sự kiện lớn",
+    pack: "Set hộp quà cao cấp in logo theo yêu cầu",
+    fruitSpec: "Trái VIP và sản phẩm chế biến đồng bộ",
+    shipPolicy: "Giao tận nơi theo hợp đồng",
   },
 ];
 
 const fallbackStories: NewsStory[] = [
   {
+    id: "van-chuyen-mang-cau-ba-den",
+    category: "Vận chuyển",
+    date: "2026-08-17",
+    title: "Vận chuyển Mãng cầu Bà Đen như thế nào?",
+    text: "Khám phá quy trình NABADEN: lựa độ già, bọc lưới xốp chống va đập và gửi đường bay.",
+    image: "/assets/thuc-te-dong-goi-nhieu-thung.jpg",
+    href: "https://nabaden.vn/tin-tuc/van-chuyen-mang-cau-ba-den/",
+  },
+  {
+    id: "cach-bao-quan-mang-cau-ba-den",
+    category: "Kinh nghiệm",
+    date: "2026-08-16",
+    title: "Cách bảo quản Mãng Cầu Bà Đen đúng cách tại nhà",
+    text: "Hướng dẫn bảo quản từ lúc nhận hàng đến khi chín, cách ủ chín tự nhiên và bảo quản mát.",
+    image: "/assets/thung-mang-cau-ba-den-dong-hop-tay-ninh.jpg",
+    href: "https://nabaden.vn/tin-tuc/cach-bao-quan-mang-cau-ba-den/",
+  },
+  {
+    id: "mua-mang-cau-ba-den-thang-may",
+    category: "Mùa vụ",
+    date: "2026-08-16",
+    title: "Mùa Mãng Cầu Bà Đen tháng mấy?",
+    text: "Tìm hiểu mùa thu hoạch mãng cầu Tây Ninh, chính vụ, nghịch vụ và kinh nghiệm chọn mua.",
+    image: "/assets/vuon-mang-cau-ba-den-tay-ninh-nang-dep.jpg",
+    href: "https://nabaden.vn/tin-tuc/mua-mang-cau-ba-den-thang-may/",
+  },
+  {
+    id: "di-tay-ninh-mua-mang-cau-ba-den-o-dau",
+    category: "Kinh nghiệm",
+    date: "2026-08-16",
+    title: "Đi Tây Ninh mua Mãng Cầu Bà Đen ở đâu?",
+    text: "Kinh nghiệm chọn mãng cầu ngon chuẩn, mua làm quà và tìm hiểu NABADEN.",
+    image: "/assets/trai-mang-cau-chin-gia-loai-1.jpg",
+    href: "https://nabaden.vn/tin-tuc/di-tay-ninh-mua-mang-cau-ba-den-o-dau/",
+  },
+  {
     id: "kgs-international-school-tham-quan-vuon-mang-cau-nabaden",
     category: "Trải nghiệm",
     date: "2026-07-18",
     title: "KGS International School tham quan NABADEN",
-    text: "Hành trình nông nghiệp xanh dưới chân Núi Bà Đen.",
+    text: "Hành trình nông nghiệp xanh dưới chân Núi Bà Đen trong chương trình KGS Unity Journey 2026.",
     image: "/assets/kgs-unity-journey-group.jpg",
     href: "https://nabaden.vn/tin-tuc/kgs-international-school-tham-quan-vuon-mang-cau-nabaden/",
-  },
-  {
-    id: "mua-mang-cau-ba-den-chinh-goc-tay-ninh",
-    category: "Mùa vụ",
-    date: "2026-07-04",
-    title: "Tìm mãng cầu Bà Đen chính gốc ở đâu?",
-    text: "Cách chọn độ chín và kiểm tra tình trạng theo mùa vụ.",
-    image: "/assets/product-gift-box.jpg",
-    href: "https://nabaden.vn/tin-tuc/mua-mang-cau-ba-den-chinh-goc-tay-ninh/",
   },
   {
     id: "mang-cau-ba-den-co-gi-dac-biet",
     category: "Kiến thức",
     date: "2026-07-04",
     title: "Mãng cầu Bà Đen có gì đặc biệt?",
-    text: "Vùng trồng, hương vị và câu chuyện trái quê Tây Ninh.",
+    text: "Vùng trồng quanh chân Núi Bà Đen, vị ngọt thanh dai thơm và chỉ dẫn địa lý Tây Ninh.",
     image: "/assets/garden-real.jpg",
     href: "https://nabaden.vn/tin-tuc/mang-cau-ba-den-co-gi-dac-biet/",
   },
@@ -95,84 +181,130 @@ const trustSlides = [
     text: "Hình ảnh thực tế tại điểm tập kết, phân loại và chuẩn bị giao hàng của NABADEN.",
   },
   {
+    id: "partner-boxes",
+    image: "/assets/thuc-te-dong-goi-nhieu-thung.jpg",
+    eyebrow: "Năng lực cung ứng",
+    title: "Đóng thùng carton bọc lưới xốp chuyên dụng",
+    text: "Từng quả bọc xốp êm ái, thùng thoáng khí chống hấp hơi, vận chuyển xe khách & máy bay an tâm.",
+  },
+  {
     id: "fresh-harvest",
-    image: "/assets/gallery-harvest-crates.jpg",
+    image: "/assets/thu-hoach-mang-cau-tuoi-cuong-la.jpg",
     eyebrow: "Vùng nguyên liệu Thạnh Tân",
-    title: "Mãng cầu vừa thu hoạch tại điểm tập kết",
-    text: "Trái được giữ cành lá, phân loại và bọc lưới bảo vệ trước khi giao.",
+    title: "Mãng cầu tươi vừa thu hoạch giữ nguyên cành lá",
+    text: "Trái tuyển chọn già đều mắt na, canh tác VietGAP an toàn dưới chân Núi Bà Đen.",
   },
   {
-    id: "packing",
-    image: "/assets/gallery-packing-process.jpg",
-    eyebrow: "Quy trình thực tế",
-    title: "Chăm chút từng trái trước khi đóng gói",
-    text: "Người lao động kiểm tra, bọc lưới và sắp xếp mãng cầu theo quy cách.",
-  },
-  {
-    id: "fruit-closeup",
-    image: "/assets/gallery-fruit-closeup.jpg",
-    eyebrow: "Chất lượng nhìn thấy",
-    title: "Cận cảnh trái mãng cầu được bọc lưới bảo vệ",
-    text: "Hình ảnh thật giúp khách dễ nhận biết quy cách sản phẩm trước khi trao đổi mùa vụ.",
+    id: "fruit-scale",
+    image: "/assets/can-mang-cau-ba-den-thanh-tan.jpg",
+    eyebrow: "Phân loại chuẩn kích cỡ",
+    title: "Cân đo và dán tem xuất xưởng HTX Thạnh Tân",
+    text: "Mỗi thùng hàng đều được cân đủ ký và dán tem nhận diện thương hiệu NABADEN.",
   },
   {
     id: "ocop",
     image: "/assets/chung-nhan-ocop-3-sao.jpg",
     eyebrow: "Chứng nhận chính thức",
     title: "Quả Mãng cầu (Na) ta đạt OCOP 3 sao",
-    text: "Chứng nhận mã số 72-703-01-2023 của HTX Nông nghiệp Mãng cầu Thạnh Tân.",
+    text: "Chứng nhận mã số 72-703-01-2023 của HTX Nông nghiệp Mãng cầu Thạnh Tân do UBND TP. Tây Ninh cấp.",
     certificate: true,
   },
   {
-    id: "factory",
-    image: "/assets/factory-visit-1.jpg",
-    eyebrow: "Năng lực hợp tác",
-    title: "Vùng trồng, chế biến và đón đoàn thực tế",
-    text: "NABADEN sẵn sàng đồng hành cùng đối tác, doanh nghiệp và chương trình trải nghiệm.",
+    id: "cooperation-meeting",
+    image: "/assets/cooperation-meeting.jpg",
+    eyebrow: "Làm việc cùng đối tác",
+    title: "Gặp gỡ, khảo sát vườn & xưởng thực tế",
+    text: "NABADEN luôn sẵn sàng đón tiếp đối tác, đại lý và CTV đến khảo sát thực địa.",
   },
 ];
 
-const navItems: Array<{ id: TabId; label: string; icon: string }> = [
+const productFaqs = [
+  {
+    q: "Mãng cầu sau khi nhận hàng bao lâu thì chín ăn được?",
+    a: "Mãng cầu được hái khi mắt na đã nở to, đạt đủ độ già sinh lý. Sau khi đóng thùng vận chuyển 1-2 ngày đến nơi, quả sẽ mềm tay dần và chín dẻo thơm ngon sau khoảng 24-48 giờ ở nhiệt độ phòng thoáng mát.",
+  },
+  {
+    q: "Vườn có hỗ trợ giao hàng đi TP.HCM, Hà Nội và các tỉnh không?",
+    a: "Có. NABADEN hỗ trợ đóng thùng chuyên dụng chống sốc và gửi xe khách trong ngày (về TP.HCM, miền Tây, miền Đông) hoặc chuyển phát nhanh đường hàng không 1-2 ngày ra Hà Nội và các tỉnh phía Bắc, đảm bảo trái nguyên vẹn không bị dập.",
+  },
+  {
+    q: "Chính sách bảo hành hoặc đổi trả sản phẩm hư hỏng như thế nào?",
+    a: "NABADEN cam kết bảo hành 1 đổi 1 hoặc hoàn tiền tương ứng nếu quả bị dập nát, hư hỏng trong quá trình vận chuyển. Bạn chỉ cần gửi ảnh/video mở thùng cho NABADEN qua Zalo OA.",
+  },
+  {
+    q: "Làm sao để nhận báo giá sỉ hoặc hợp tác phân phối?",
+    a: "Bạn có thể chuyển sang tab 'Hợp tác' trên ứng dụng để gửi đăng ký, hoặc gọi trực tiếp Hotline 0907 215 521 / nhắn tin Zalo OA để nhận bảng giá sỉ & chiết khấu theo ngày.",
+  },
+];
+
+const navItems: Array<{ id: TabId; label: string; icon: string; highlight?: boolean }> = [
   { id: "home", label: "Trang chủ", icon: "⌂" },
   { id: "products", label: "Sản phẩm", icon: "◫" },
+  { id: "partner", label: "Hợp tác", icon: "🤝", highlight: true },
   { id: "experience", label: "Trải nghiệm", icon: "♧" },
   { id: "news", label: "Tin tức", icon: "▤" },
   { id: "contact", label: "Kết nối", icon: "◎" },
 ];
 
 export default function Home() {
-  const [tab, setTab] = useState<TabId>("home");
+  const [tab, setTab] = useState<TabId>(() => {
+    if (typeof window !== "undefined") {
+      const requestedTab = new URLSearchParams(window.location.search).get("tab");
+      if (navItems.some((item) => item.id === requestedTab)) return requestedTab as TabId;
+    }
+    return "home";
+  });
   const [filter, setFilter] = useState("Tất cả");
   const [query, setQuery] = useState("");
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [basket, setBasket] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return JSON.parse(localStorage.getItem("nabaden-favorites") || "[]");
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
+  const [basket, setBasket] = useState<string[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return JSON.parse(localStorage.getItem("nabaden-basket") || "[]");
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
   const [basketOpen, setBasketOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [bookingMessage, setBookingMessage] = useState("");
   const [supportOpen, setSupportOpen] = useState(false);
   const [trustSlide, setTrustSlide] = useState(0);
   const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(() => {
+    if (typeof window !== "undefined") {
+      const standaloneNavigator = navigator as Navigator & { standalone?: boolean };
+      return window.matchMedia("(display-mode: standalone)").matches || standaloneNavigator.standalone === true;
+    }
+    return false;
+  });
   const [showIosHelp, setShowIosHelp] = useState(false);
   const [toast, setToast] = useState("");
-  const [online, setOnline] = useState(true);
+  const [online, setOnline] = useState(() => {
+    if (typeof navigator !== "undefined") {
+      return navigator.onLine;
+    }
+    return true;
+  });
   const [stories, setStories] = useState<NewsStory[]>(fallbackStories);
 
+  // Partner Tab State
+  const [partnerRole, setPartnerRole] = useState<"ctv" | "npp">("ctv");
+  const [formRole, setFormRole] = useState("Cộng tác viên (CTV)");
+  const [partnerSubmittedMsg, setPartnerSubmittedMsg] = useState("");
+
   useEffect(() => {
-    const requestedTab = new URLSearchParams(window.location.search).get("tab");
-    if (navItems.some((item) => item.id === requestedTab)) setTab(requestedTab as TabId);
-    try {
-      setFavorites(JSON.parse(localStorage.getItem("nabaden-favorites") || "[]"));
-      setBasket(JSON.parse(localStorage.getItem("nabaden-basket") || "[]"));
-    } catch {
-      // Keep a clean local state if older data is malformed.
-    }
-    setOnline(navigator.onLine);
-    const standaloneNavigator = navigator as Navigator & { standalone?: boolean };
-    setIsInstalled(
-      window.matchMedia("(display-mode: standalone)").matches ||
-      standaloneNavigator.standalone === true,
-    );
     const handleInstall = (event: Event) => {
       event.preventDefault();
       setInstallEvent(event as InstallEvent);
@@ -259,7 +391,7 @@ export default function Home() {
     const term = query.trim().toLocaleLowerCase("vi");
     return products.filter((product) => {
       const matchesFilter = filter === "Tất cả" || product.category === filter;
-      const matchesQuery = !term || `${product.name} ${product.description}`.toLocaleLowerCase("vi").includes(term);
+      const matchesQuery = !term || `${product.name} ${product.description} ${product.tag}`.toLocaleLowerCase("vi").includes(term);
       return matchesFilter && matchesQuery;
     });
   }, [filter, query]);
@@ -272,9 +404,9 @@ export default function Home() {
   const consultationMessage = useMemo(
     () => [
       "Xin chào NABADEN, tôi đang quan tâm các sản phẩm:",
-      ...selectedProducts.map((product) => `• ${product.name}`),
+      ...selectedProducts.map((product) => `• ${product.name} (${product.note})`),
       "",
-      "Nhờ NABADEN tư vấn giúp tôi về giá, quy cách đóng gói và tình trạng hiện tại. Xin cảm ơn!",
+      "Nhờ NABADEN tư vấn giúp tôi về báo giá hôm nay, quy cách đóng gói và thời gian giao hàng. Xin cảm ơn!",
     ].join("\n"),
     [selectedProducts],
   );
@@ -292,11 +424,11 @@ export default function Home() {
 
   const shareApp = async () => {
     const shareUrl = new URL(window.location.href);
-    shareUrl.searchParams.set("share", "partner-20260723");
+    shareUrl.searchParams.set("share", "partner-20260817");
     if (navigator.share) {
       await navigator.share({
-        title: "NABADEN",
-        text: "Mãng cầu Bà Đen chính gốc Tây Ninh",
+        title: "NABADEN - Mãng cầu Bà Đen Tây Ninh",
+        text: "Sản phẩm OCOP 3 sao và cơ hội hợp tác phân phối Mãng Cầu Bà Đen",
         url: shareUrl.toString(),
       });
     } else {
@@ -370,6 +502,31 @@ export default function Home() {
     window.open(ZALO_OA_URL, "_blank", "noopener,noreferrer");
   };
 
+  const submitPartnerForm = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const body = [
+      "Xin chào NABADEN, tôi muốn đăng ký HỢP TÁC PHÂN PHỐI:",
+      `Mô hình quan tâm: ${formRole}`,
+      `Họ và tên: ${data.get("name")}`,
+      `Số điện thoại (Zalo): ${data.get("phone")}`,
+      `Khu vực kinh doanh: ${data.get("region") || "Chưa ghi"}`,
+      `Kênh bán / Quy mô: ${data.get("channel") || "Chưa ghi"}`,
+      `Ghi chú & nhu cầu: ${data.get("note") || "Không có"}`,
+    ].join("\n");
+    setPartnerSubmittedMsg(body);
+    try {
+      if (navigator.clipboard) {
+        void navigator.clipboard.writeText(body)
+          .then(() => notify("Đã sao chép đề xuất · Hãy gửi vào Zalo OA"))
+          .catch(() => notify("Hãy nhấn giữ nội dung để sao chép"));
+      }
+    } catch {
+      // Ignored
+    }
+    window.open(PARTNER_ZALO_URL, "_blank", "noopener,noreferrer");
+  };
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -378,6 +535,9 @@ export default function Home() {
           <span>OCOP 3★</span>
         </button>
         <div className="top-actions">
+          <button className="top-partner-btn" onClick={() => changeTab("partner")} aria-label="Mở trang hợp tác">
+            <span>🤝</span> Hợp tác
+          </button>
           <button className="icon-button" onClick={shareApp} aria-label="Chia sẻ ứng dụng">↗</button>
         </div>
       </header>
@@ -385,27 +545,50 @@ export default function Home() {
       {!online && <div className="offline-banner">Bạn đang ngoại tuyến · Nội dung đã lưu vẫn dùng được</div>}
 
       <div className="screen" key={tab}>
+        {/* =========================================
+            TAB 1: TRANG CHỦ (HOME)
+           ========================================= */}
         {tab === "home" && (
           <>
             <section className="hero-card">
-              <img src="/assets/garden-real.jpg" alt="Vườn mãng cầu Bà Đen" />
+              <img src="/assets/vuon-mang-cau-ba-den-tay-ninh-nang-dep.jpg" alt="Vườn mãng cầu Bà Đen NABADEN" />
               <div className="hero-shade" />
               <div className="hero-content">
                 <span className="eyebrow light">Từ vùng nguyên liệu Tây Ninh</span>
-                <h1><a href="https://mangcaubaden.vn">Mãng cầu Bà Đen</a><br />chính gốc.</h1>
-                <p>Vùng trồng thật · Chế biến thật · OCOP 3 sao</p>
-                <button onClick={() => changeTab("products")}>Khám phá sản phẩm <b>→</b></button>
+                <h1><a href="https://mangcaubaden.vn">Mãng cầu Bà Đen</a><br />chính gốc Tây Ninh.</h1>
+                <p>Quả tươi OCOP 3 sao · Đóng thùng bọc xốp · Tuyển NPP & CTV toàn quốc</p>
+                <div className="hero-btn-row">
+                  <button className="hero-btn-primary" onClick={() => changeTab("products")}>Xem sản phẩm <b>→</b></button>
+                  <button className="hero-btn-secondary" onClick={() => changeTab("partner")}>🤝 Hợp tác phân phối</button>
+                </div>
               </div>
               <div className="hero-badge"><strong>3★</strong><span>OCOP<br />chính thức</span></div>
             </section>
 
             <section className="quick-grid" aria-label="Tác vụ nhanh">
-              <button onClick={() => changeTab("products")}><span>🍈</span><b>Sản phẩm</b><small>Xem mùa vụ</small></button>
-              <button onClick={openBooking}><span>🌿</span><b>Đặt lịch vườn</b><small>Trải nghiệm hái quả</small></button>
-              <a href={ZALO_OA_URL}><span>💬</span><b>Nhắn Zalo</b><small>Tư vấn nhanh</small></a>
-              <a href="https://maps.app.goo.gl/r8JkWUTPksY2CjsB7"><span>⌖</span><b>Chỉ đường</b><small>Thạnh Tân</small></a>
+              <button onClick={() => changeTab("products")}><span>🍈</span><b>Sản phẩm</b><small>3 quy cách</small></button>
+              <button className="highlight-quick" onClick={() => changeTab("partner")}><span>🤝</span><b>Hợp tác</b><small>CTV / NPP</small></button>
+              <button onClick={openBooking}><span>🌿</span><b>Đặt lịch vườn</b><small>Hái quả</small></button>
+              <a href={ZALO_OA_URL} target="_blank" rel="noreferrer"><span>💬</span><b>Nhắn Zalo</b><small>Tư vấn nhanh</small></a>
             </section>
 
+            {/* Banner nổi bật Hợp Tác */}
+            <section className="home-partner-card">
+              <span className="home-partner-badge">🤝 Cơ hội hợp tác kinh doanh</span>
+              <h2>Cùng NABADEN phân phối Mãng Cầu Bà Đen</h2>
+              <p>Mô hình linh hoạt, không áp lực ôm hàng, NABADEN hỗ trợ cắt hái tại vườn, đóng thùng bọc xốp, ship COD toàn quốc và đối soát minh bạch.</p>
+              <div className="home-partner-perks">
+                <div><span>✓</span> Vốn 0đ cho CTV</div>
+                <div><span>✓</span> Giá sỉ tận vườn cho NPP</div>
+                <div><span>✓</span> Nguồn hàng ổn định</div>
+                <div><span>✓</span> Bao dập vỡ vận chuyển</div>
+              </div>
+              <button className="home-partner-btn" onClick={() => changeTab("partner")}>
+                Khám phá chính sách hợp tác chi tiết →
+              </button>
+            </section>
+
+            {/* Slider Thực Tế & Chứng Nhận */}
             <section className="trust-section" aria-label="Hình ảnh thực tế và chứng nhận NABADEN">
               <div className="trust-heading">
                 <div><span>Uy tín từ điều có thật</span><h2>Thực tế & chứng nhận</h2></div>
@@ -418,7 +601,7 @@ export default function Home() {
                   <span>{trustSlides[trustSlide].eyebrow}</span>
                   <h3>{trustSlides[trustSlide].title}</h3>
                   <p>{trustSlides[trustSlide].text}</p>
-                  {trustSlides[trustSlide].certificate && <a href="/assets/chung-nhan-ocop-3-sao.jpg" target="_blank">Xem chứng nhận đầy đủ ↗</a>}
+                  {trustSlides[trustSlide].certificate && <a href="/assets/chung-nhan-ocop-3-sao.jpg" target="_blank" rel="noreferrer">Xem chứng nhận đầy đủ ↗</a>}
                 </div>
                 <button className="trust-prev" onClick={() => setTrustSlide((trustSlide - 1 + trustSlides.length) % trustSlides.length)} aria-label="Ảnh trước">‹</button>
                 <button className="trust-next" onClick={() => setTrustSlide((trustSlide + 1) % trustSlides.length)} aria-label="Ảnh tiếp theo">›</button>
@@ -426,10 +609,15 @@ export default function Home() {
               <div className="trust-dots" aria-label="Chọn ảnh">
                 {trustSlides.map((slide, index) => <button key={slide.id} className={trustSlide === index ? "active" : ""} onClick={() => setTrustSlide(index)} aria-label={`Xem slide ${index + 1}`} />)}
               </div>
-              <div className="trust-proof"><span><b>3★</b> OCOP chính thức</span><span><b>✓</b> Vùng trồng thật</span><span><b>✓</b> Đóng gói thực tế</span></div>
+              <div className="trust-proof">
+                <span><b>3★</b> OCOP chính thức</span>
+                <span><b>✓</b> Thùng xốp chuyên dụng</span>
+                <span><b>🤝</b> Tiếp nhận CTV/NPP</span>
+              </div>
             </section>
 
-            <SectionHead eyebrow="Gợi ý hôm nay" title="Sản phẩm từ trái quê" action="Xem tất cả" onAction={() => changeTab("products")} />
+            {/* Sản phẩm chủ lực */}
+            <SectionHead eyebrow="Quy cách đóng gói" title="Dòng sản phẩm chính gốc" action="Xem tất cả" onAction={() => changeTab("products")} />
             <div className="product-grid home-product-grid">
               {products.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} favorite={favorites.includes(product.id)} inBasket={basket.includes(product.id)} onFavorite={toggleFavorite} onBasket={toggleBasket} />
@@ -439,54 +627,399 @@ export default function Home() {
             <section className="story-card">
               <div>
                 <span className="eyebrow">Câu chuyện thương hiệu</span>
-                <h2>Nâng giá trị trái quê bằng một con đường tử tế.</h2>
-                <p>Điểm nối giữa nhà vườn, sản phẩm OCOP, trải nghiệm và thị trường hiện đại.</p>
-                <button onClick={() => changeTab("experience")}>Khám phá NABADEN →</button>
+                <h2>Hợp tác không chỉ bán hàng, mà cùng nâng giá trị trái quê.</h2>
+                <p>NABADEN là cầu nối giữa HTX Thạnh Tân, nông dân Tây Ninh và đối tác phân phối trên toàn quốc.</p>
+                <button onClick={() => changeTab("partner")}>Xem đề xuất hợp tác →</button>
               </div>
-              <img src="/assets/factory-visit-1.jpg" alt="Đoàn tham quan NABADEN" />
+              <img src="/assets/cooperation-meeting.jpg" alt="Buổi làm việc hợp tác NABADEN" />
             </section>
 
-            <SectionHead eyebrow="Mới từ vườn" title="Tin & kiến thức" action="Xem thêm" onAction={() => changeTab("news")} />
+            <SectionHead eyebrow="Cẩm nang & tin tức" title="Kiến thức từ vùng trồng" action="Xem thêm" onAction={() => changeTab("news")} />
             <a className="featured-news" href={stories[0].href} target="_blank" rel="noreferrer">
               <img src={stories[0].image} alt="" />
-              <div><small>{newsTag(stories[0])}</small><h3>{stories[0].title}</h3><span>Đọc bài ↗</span></div>
+              <div><small>{newsTag(stories[0])}</small><h3>{stories[0].title}</h3><span>Đọc bài trên nabaden.vn ↗</span></div>
             </a>
           </>
         )}
 
+        {/* =========================================
+            TAB 2: SẢN PHẨM (PRODUCTS)
+           ========================================= */}
         {tab === "products" && (
           <>
-            <PageIntro eyebrow="Từ vùng nguyên liệu Tây Ninh" title="Chọn sản phẩm bạn quan tâm" text="Giá, quy cách và tình trạng được tư vấn theo mùa vụ thực tế." />
+            <PageIntro eyebrow="Chuẩn VietGAP & OCOP 3 Sao" title="Danh mục Sản Phẩm NABADEN" text="Tuyển chọn trái già loại 1 dưới chân Núi Bà Đen Tây Ninh với 3 quy cách đóng gói chuyên dụng và các dòng chế biến cao cấp." />
+            
             <label className="search-box">
               <span>⌕</span>
-              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm sản phẩm..." />
+              <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm hộp VIP, thùng 5kg, thùng 15kg..." />
             </label>
+            
             <div className="filter-row">
               {["Tất cả", "Tươi", "Chế biến", "Quà tặng"].map((item) => (
                 <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>
               ))}
             </div>
+
             <div className="product-grid">
               {filteredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} favorite={favorites.includes(product.id)} inBasket={basket.includes(product.id)} onFavorite={toggleFavorite} onBasket={toggleBasket} />
               ))}
             </div>
-            {!filteredProducts.length && <div className="empty-state"><span>🍃</span><h3>Chưa tìm thấy sản phẩm</h3><p>Thử một từ khóa hoặc nhóm sản phẩm khác.</p></div>}
-            <div className="notice-card"><span>✓</span><div><b>Thông tin minh bạch</b><p>Huy hiệu OCOP 3 sao hiện áp dụng cho “Quả Mãng cầu (Na) ta”.</p></div></div>
+
+            {!filteredProducts.length && (
+              <div className="empty-state">
+                <span>🍃</span>
+                <h3>Chưa tìm thấy sản phẩm</h3>
+                <p>Thử một từ khóa hoặc chuyển nhóm sản phẩm khác.</p>
+              </div>
+            )}
+
+            {/* Bảng so sánh quy cách */}
+            <section className="specs-section">
+              <span className="eyebrow">So sánh quy cách</span>
+              <h3>Bảng so sánh chi tiết các quy cách đóng gói</h3>
+              <p>Giúp bạn dễ dàng chọn lựa quy cách phù hợp cho mục đích biếu tặng, thưởng thức gia đình hoặc phân phối bán sỉ.</p>
+              <div className="specs-table-scroll">
+                <table className="specs-table">
+                  <thead>
+                    <tr>
+                      <th>Dòng sản phẩm</th>
+                      <th>Mục đích sử dụng</th>
+                      <th>Đóng gói</th>
+                      <th>Chính sách giao</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.slice(0, 3).map((item) => (
+                      <tr key={item.id}>
+                        <td><strong>{item.name}</strong><br /><small>{item.tag}</small></td>
+                        <td>{item.target}</td>
+                        <td>{item.pack}</td>
+                        <td>{item.shipPolicy}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            {/* FAQ Sản Phẩm */}
+            <section className="faq-box">
+              <span className="eyebrow">Hỏi đáp mua hàng</span>
+              <h3>Câu hỏi thường gặp về Mãng Cầu NABADEN</h3>
+              {productFaqs.map((faq, i) => (
+                <details className="faq-item" key={i} open={i === 0}>
+                  <summary className="faq-summary">
+                    <span>{faq.q}</span>
+                    <b>+</b>
+                  </summary>
+                  <div className="faq-content">{faq.a}</div>
+                </details>
+              ))}
+            </section>
+
+            <div className="notice-card">
+              <span>✓</span>
+              <div>
+                <b>Thông tin minh bạch</b>
+                <p>Huy hiệu OCOP 3 sao áp dụng cho “Quả Mãng cầu (Na) ta” theo Quyết định của UBND TP. Tây Ninh (Mã số: 72-703-01-2023).</p>
+              </div>
+            </div>
           </>
         )}
 
+        {/* =========================================
+            TAB 3: HỢP TÁC (PARTNER / COOPERATION)
+           ========================================= */}
+        {tab === "partner" && (
+          <>
+            <section className="partner-hero-box">
+              <span className="partner-hero-kicker">🤝 Tuyển Đối Tác Phân Phối & CTV</span>
+              <h1 className="partner-hero-title">Đồng hành phân phối <em>Mãng Cầu Bà Đen</em></h1>
+              <p className="partner-hero-desc">Không áp lực ôm hàng, NABADEN hỗ trợ toàn bộ các khâu từ cắt hái tại vườn, bọc lưới xốp đóng thùng, giao hàng thu COD và đối soát chiết khấu minh bạch.</p>
+              
+              <div className="partner-hero-pills">
+                <span className="partner-pill"><b>✓</b> Vốn 0đ cho CTV</span>
+                <span className="partner-pill"><b>✓</b> Giá sỉ tận vườn cho NPP</span>
+                <span className="partner-pill"><b>✓</b> Bao dập vỡ khi ship</span>
+                <span className="partner-pill"><b>✓</b> OCOP 3★ & VietGAP</span>
+              </div>
+
+              <div className="partner-hero-actions">
+                <a className="btn-partner-primary" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer">
+                  Nhắn Zalo Đối Tác ↗
+                </a>
+                <a className="btn-partner-secondary" href={`tel:${HOTLINE_PHONE}`}>
+                  📞 Gọi {HOTLINE_DISPLAY}
+                </a>
+              </div>
+            </section>
+
+            {/* Switcher: CTV vs Nhà Phân Phối */}
+            <div className="partner-role-switch">
+              <button 
+                className={`partner-role-tab ${partnerRole === "ctv" ? "active" : ""}`}
+                onClick={() => { setPartnerRole("ctv"); setFormRole("Cộng tác viên (CTV)"); }}
+              >
+                <span>🌸</span>
+                <b>Cộng Tác Viên (CTV)</b>
+                <small>Bán online · Vốn 0đ</small>
+              </button>
+              <button 
+                className={`partner-role-tab ${partnerRole === "npp" ? "active" : ""}`}
+                onClick={() => { setPartnerRole("npp"); setFormRole("Nhà Phân Phối / Đại Lý"); }}
+              >
+                <span>🏢</span>
+                <b>Nhà Phân Phối / Đại Lý</b>
+                <small>Bán sỉ · Cửa hàng sạch</small>
+              </button>
+            </div>
+
+            {/* Chi tiết chính sách theo vai trò */}
+            {partnerRole === "ctv" ? (
+              <div className="partner-tier-box ctv">
+                <div className="tier-header">
+                  <div className="tier-header-info">
+                    <h3>Cộng Tác Viên Bán Online</h3>
+                    <span>Không cần vốn · Không ôm hàng · Không lo rủi ro</span>
+                  </div>
+                  <span className="tier-badge-pill ctv">Dành cho cá nhân</span>
+                </div>
+                <div className="tier-benefits-list">
+                  <div className="tier-benefit-row ctv">
+                    <span>1</span>
+                    <div><b>Vốn 0 đồng, không ôm hàng:</b><small>Bạn chỉ cần đăng bài giới thiệu và chốt đơn. Không cần nhập hàng trước, không lo tồn đọng hay thối hỏng quả.</small></div>
+                  </div>
+                  <div className="tier-benefit-row ctv">
+                    <span>2</span>
+                    <div><b>NABADEN lo đóng gói & ship COD:</b><small>Vườn tự tay hái trái già chuẩn, bọc lưới xốp, đóng thùng carton và giao tận tay khách của bạn, thu tiền COD hộ.</small></div>
+                  </div>
+                  <div className="tier-benefit-row ctv">
+                    <span>3</span>
+                    <div><b>Chiết khấu hấp dẫn & đối soát tuần:</b><small>Nhận hoa hồng trực tiếp trên từng đơn hàng. Bảng kê đối soát minh bạch gửi về mỗi tuần.</small></div>
+                  </div>
+                  <div className="tier-benefit-row ctv">
+                    <span>4</span>
+                    <div><b>Kho media ảnh & video thật từ vườn:</b><small>Được cung cấp trọn bộ hình ảnh lứa trái thực tế trong ngày, video hái quả và bài mẫu đăng mạng xã hội.</small></div>
+                  </div>
+                </div>
+                <a className="btn-partner-primary" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer" style={{ width: "100%" }}>
+                  Đăng ký làm CTV qua Zalo OA →
+                </a>
+              </div>
+            ) : (
+              <div className="partner-tier-box npp">
+                <div className="tier-header">
+                  <div className="tier-header-info">
+                    <h3>Nhà Phân Phối & Đại Lý</h3>
+                    <span>Giá sỉ tận gốc HTX · Nguồn hàng ổn định cả vụ nghịch</span>
+                  </div>
+                  <span className="tier-badge-pill npp">Đại lý & Cửa hàng</span>
+                </div>
+                <div className="tier-benefits-list">
+                  <div className="tier-benefit-row npp">
+                    <span>1</span>
+                    <div><b>Giá sỉ ưu đãi nhất tận vườn:</b><small>Báo giá trực tiếp từ HTX Nông nghiệp Mãng cầu Thạnh Tân, chiết khấu cao theo khối lượng thùng 5kg - 15kg.</small></div>
+                  </div>
+                  <div className="tier-benefit-row npp">
+                    <span>2</span>
+                    <div><b>Nguồn cung ổn định quanh năm:</b><small>Ưu tiên giữ hàng và ổn định giá cả trong mùa nghịch vụ lẫn dịp cao điểm lễ, Tết.</small></div>
+                  </div>
+                  <div className="tier-benefit-row npp">
+                    <span>3</span>
+                    <div><b>Thùng carton 3-5 lớp chuyên dụng:</b><small>Chống va đập, thoáng khí chống hấp hơi, vận chuyển xe khách liên tỉnh & đường bay toàn quốc an tâm.</small></div>
+                  </div>
+                  <div className="tier-benefit-row npp">
+                    <span>4</span>
+                    <div><b>Hồ sơ OCOP 3 sao & hỗ trợ POSM:</b><small>Cung cấp giấy chứng nhận OCOP 3 sao, VietGAP, tem truy xuất nguồn gốc, hình ảnh standee cho điểm bán.</small></div>
+                  </div>
+                </div>
+                <a className="btn-partner-primary" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer" style={{ width: "100%", background: "#b45309", color: "#ffffff" }}>
+                  Nhận báo giá sỉ & Đàm phán hợp tác →
+                </a>
+              </div>
+            )}
+
+            {/* Quy trình làm việc 4 bước */}
+            <section className="partner-process-box">
+              <span className="eyebrow">Quy trình làm việc</span>
+              <h3>Quy trình hợp tác 4 bước nhanh gọn</h3>
+              <div className="process-grid-4">
+                <div className="process-step-item">
+                  <div className="process-step-num">01</div>
+                  <div className="process-step-title">Tiếp nhận</div>
+                  <div className="process-step-desc">Nắm bắt khu vực, mô hình kinh doanh & nhu cầu dự kiến.</div>
+                </div>
+                <div className="process-step-item">
+                  <div className="process-step-num">02</div>
+                  <div className="process-step-title">Tư vấn</div>
+                  <div className="process-step-desc">Gửi bảng giá chiết khấu, quy cách và chính sách phù hợp.</div>
+                </div>
+                <div className="process-step-item">
+                  <div className="process-step-num">03</div>
+                  <div className="process-step-title">Khảo sát / Mẫu</div>
+                  <div className="process-step-desc">Gửi mẫu thử thực tế hoặc đón tiếp khảo sát tại vườn & xưởng.</div>
+                </div>
+                <div className="process-step-item">
+                  <div className="process-step-num">04</div>
+                  <div className="process-step-title">Triển khai</div>
+                  <div className="process-step-desc">Thống nhất lịch giao, bắt đầu đẩy hàng và đối soát định kỳ.</div>
+                </div>
+              </div>
+            </section>
+
+            {/* Năng lực thực tế */}
+            <section className="specs-section">
+              <span className="eyebrow">Có thật để cùng làm thật</span>
+              <h3>Năng lực sản xuất & cung ứng thực tế</h3>
+              <p>Nền tảng hợp tác bền vững được xây dựng trên vùng trồng Thạnh Tân, nhà xưởng đóng gói đạt chuẩn và sự đồng hành tận tâm.</p>
+              <div className="experience-gallery">
+                <figure className="wide">
+                  <img src="/assets/thuc-te-dong-goi-nhieu-thung.jpg" alt="Xưởng đóng gói mãng cầu NABADEN" />
+                  <figcaption>Xưởng phân loại và đóng thùng carton bọc xốp chuyên dụng</figcaption>
+                </figure>
+                <figure>
+                  <img src="/assets/can-mang-cau-ba-den-thanh-tan.jpg" alt="Cân trọng lượng mãng cầu" />
+                  <figcaption>Cân đo và dán tem xuất xưởng</figcaption>
+                </figure>
+                <figure>
+                  <img src="/assets/cooperation-meeting.jpg" alt="Làm việc cùng đối tác" />
+                  <figcaption>Trao đổi và hợp tác trực tiếp</figcaption>
+                </figure>
+              </div>
+            </section>
+
+            {/* Form đăng ký hợp tác trực tiếp */}
+            <section className="partner-form-wrapper" id="partner-form">
+              {partnerSubmittedMsg ? (
+                <div className="booking-ready">
+                  <div className="booking-ready-title">
+                    <span>✓</span>
+                    <div>
+                      <b>Đề xuất hợp tác đã được sao chép!</b>
+                      <small>Hãy dán nội dung này vào cuộc trò chuyện Zalo OA để NABADEN phản hồi ngay.</small>
+                    </div>
+                  </div>
+                  <div className="consultation-copy">
+                    <div>
+                      <span>NỘI DUNG ĐỀ XUẤT HỢP TÁC</span>
+                      <button onClick={() => {
+                        void navigator.clipboard.writeText(partnerSubmittedMsg);
+                        notify("Đã sao chép lại đề xuất hợp tác");
+                      }}>Sao chép lại</button>
+                    </div>
+                    <textarea value={partnerSubmittedMsg} readOnly aria-label="Nội dung đề xuất hợp tác" />
+                  </div>
+                  <div className="zalo-guide">
+                    <b>1</b><span>Mở Zalo OA</span><i>→</i>
+                    <b>2</b><span>Dán đề xuất</span><i>→</i>
+                    <b>3</b><span>Nhấn gửi</span>
+                  </div>
+                  <div className="partner-form-btns" style={{ marginTop: "12px" }}>
+                    <a className="btn-submit-partner" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer">
+                      <span>Zalo</span> Mở Zalo OA đối tác ngay ↗
+                    </a>
+                    <button
+                      type="button"
+                      className="btn-call-partner"
+                      onClick={() => setPartnerSubmittedMsg("")}
+                    >
+                      <span>↺</span> Điền lại thông tin khác
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="partner-form-head">
+                    <span className="form-tag">Đăng ký hợp tác</span>
+                    <h3>Gửi đề xuất hợp tác cùng NABADEN</h3>
+                    <p>Điền thông tin bên dưới, hệ thống sẽ hỗ trợ bạn kết nối nhanh với bộ phận phụ trách đối tác của NABADEN.</p>
+                  </div>
+
+                  <form className="partner-form" onSubmit={submitPartnerForm}>
+                    <label>
+                      Hình thức bạn muốn hợp tác
+                      <div className="form-role-select-grid">
+                        {[
+                          "Cộng tác viên (CTV)",
+                          "Nhà Phân Phối / Đại Lý",
+                          "Cửa hàng trái cây sạch",
+                          "Khách mua sỉ sự kiện",
+                        ].map((role) => (
+                          <button
+                            type="button"
+                            key={role}
+                            className={`form-role-card ${formRole === role ? "active" : ""}`}
+                            onClick={() => setFormRole(role)}
+                          >
+                            <span>{formRole === role ? "●" : "○"}</span> {role}
+                          </button>
+                        ))}
+                      </div>
+                    </label>
+
+                    <label>
+                      Họ và tên của bạn *
+                      <input name="name" required placeholder="Ví dụ: Nguyễn Văn A" />
+                    </label>
+
+                    <label>
+                      Số điện thoại / Zalo liên hệ *
+                      <input name="phone" required inputMode="tel" placeholder="09xx xxx xxx" />
+                    </label>
+
+                    <label>
+                      Tỉnh / Thành phố bạn hoạt động
+                      <input name="region" placeholder="Ví dụ: TP. Hồ Chí Minh, Hà Nội, Tây Ninh,..." />
+                    </label>
+
+                    <label>
+                      Kênh bán hàng hoặc số lượng dự kiến
+                      <input name="channel" placeholder="Ví dụ: Facebook / TikTok / Cửa hàng mặt phố / 50kg mỗi tuần" />
+                    </label>
+
+                    <label>
+                      Ghi chú thêm (nếu có)
+                      <textarea name="note" placeholder="Câu hỏi về chiết khấu, mẫu thử hoặc thời gian thuận tiện trao đổi..." />
+                    </label>
+
+                    <div className="partner-form-btns">
+                      <button className="btn-submit-partner" type="submit">
+                        <span>⚡</span> Gửi đề xuất qua Zalo OA đối tác →
+                      </button>
+                      <a className="btn-call-partner" href={`tel:${HOTLINE_PHONE}`}>
+                        <span>📞</span> Hoặc gọi trực tiếp Hotline {HOTLINE_DISPLAY}
+                      </a>
+                    </div>
+                  </form>
+                </>
+              )}
+            </section>
+          </>
+        )}
+
+        {/* =========================================
+            TAB 4: TRẢI NGHIỆM (EXPERIENCE)
+           ========================================= */}
         {tab === "experience" && (
           <>
-            <PageIntro eyebrow="Dưới chân Núi Bà Đen" title="Một ngày chạm vào vườn xanh" text="Chương trình được thiết kế theo mùa, độ tuổi và mục tiêu của từng đoàn." />
-            <div className="experience-hero"><img src="/assets/kgs-unity-journey-group.jpg" alt="Đoàn khách trải nghiệm tại NABADEN" /><div><strong>Trải nghiệm tại vườn NABADEN</strong><span>Không gian xanh dưới chân Núi Bà Đen</span></div></div>
+            <PageIntro eyebrow="Dưới chân Núi Bà Đen" title="Một ngày chạm vào vườn xanh" text="Chương trình tham quan và trải nghiệm hái quả được thiết kế theo mùa vụ, thời tiết và quy mô từng đoàn." />
+            <div className="experience-hero">
+              <img src="/assets/kgs-unity-journey-group.jpg" alt="Đoàn khách trải nghiệm tại NABADEN" />
+              <div>
+                <strong>Trải nghiệm tại vườn NABADEN</strong>
+                <span>Không gian xanh dưới chân Núi Bà Đen Tây Ninh</span>
+              </div>
+            </div>
             <div className="program-list">
-              <Program number="01" title="Tham quan vùng trồng" text="Tìm hiểu cây mãng cầu, mùa vụ và câu chuyện sản xuất địa phương." />
-              <Program number="02" title="Trải nghiệm hái quả" text="Tự tay tìm hiểu, lựa chọn và hái mãng cầu theo mùa vụ thực tế." />
-              <Program number="03" title="Đoàn doanh nghiệp" text="Khảo sát nguyên liệu, trao đổi hợp tác và tìm hiểu sản phẩm." />
+              <Program number="01" title="Tham quan vùng trồng" text="Tìm hiểu cây mãng cầu, mùa vụ và câu chuyện sản xuất nông nghiệp sạch địa phương." />
+              <Program number="02" title="Trải nghiệm hái quả" text="Tự tay tìm hiểu, lựa chọn và hái những trái mãng cầu già ngon theo mùa vụ thực tế." />
+              <Program number="03" title="Đoàn doanh nghiệp & đối tác" text="Khảo sát vùng nguyên liệu, trao đổi cơ hội hợp tác và tham quan quy trình đóng gói." />
             </div>
             <section className="experience-moments">
-              <div className="experience-moments-head"><div><span>Khoảnh khắc thực tế</span><h2>Hình ảnh các đoàn tham quan</h2></div></div>
+              <div className="experience-moments-head">
+                <div><span>Khoảnh khắc thực tế</span><h2>Hình ảnh các đoàn tham quan</h2></div>
+              </div>
               <div className="experience-gallery">
                 <figure className="wide"><img src="/assets/kgs-orchard-nui-ba-den.jpg" alt="Vườn mãng cầu NABADEN dưới chân Núi Bà Đen" /><figcaption>Vùng trồng dưới chân Núi Bà Đen</figcaption></figure>
                 <figure><img src="/assets/kgs-school-buses.jpg" alt="Đoàn khách đến tham quan NABADEN" /><figcaption>Đón đoàn tại khu trải nghiệm</figcaption></figure>
@@ -498,131 +1031,239 @@ export default function Home() {
             <section className="booking-card">
               <span className="eyebrow light">Trải nghiệm theo mùa</span>
               <h2>Tự tay hái mãng cầu tại vườn.</h2>
-              <p>Đặt lịch trước để NABADEN kiểm tra mùa vụ, thời tiết và chuẩn bị chương trình phù hợp cho gia đình hoặc khách đoàn.</p>
-              <button onClick={openBooking}>Đặt lịch hái quả →</button>
+              <p>Đặt lịch trước để NABADEN kiểm tra mùa vụ, thời tiết và chuẩn bị chu đáo cho gia đình hoặc đoàn của bạn.</p>
+              <button onClick={openBooking}>Đặt lịch trải nghiệm ngay →</button>
             </section>
             <div className="principles">
-              <div><span>📅</span><b>Lịch rõ ràng</b><small>Theo mùa vụ & thời tiết</small></div>
-              <div><span>👥</span><b>Quy mô phù hợp</b><small>Theo điều kiện vận hành</small></div>
-              <div><span>🤝</span><b>Phối hợp kỹ</b><small>Thống nhất trước chương trình</small></div>
+              <div><span>📅</span><b>Lịch rõ ràng</b><small>Theo mùa & thời tiết</small></div>
+              <div><span>👥</span><b>Quy mô phù hợp</b><small>Đảm bảo an toàn</small></div>
+              <div><span>🤝</span><b>Phối hợp kỹ</b><small>Thống nhất trước</small></div>
             </div>
           </>
         )}
 
+        {/* =========================================
+            TAB 5: TIN TỨC & CẨM NANG (NEWS)
+           ========================================= */}
         {tab === "news" && (
           <>
-            <PageIntro eyebrow="Kiến thức & tin tức" title="Chuyện từ vùng mãng cầu" text="Hiểu sản phẩm, mùa vụ và những hoạt động đang diễn ra tại NABADEN." />
+            <PageIntro eyebrow="Kiến thức & tin tức" title="Cẩm nang Mãng Cầu Bà Đen" text="Hiểu đúng về cách chọn quả, bảo quản, vận chuyển và những hoạt động mới nhất tại NABADEN." />
             <div className="news-list">
               {stories.map((story, index) => (
                 <a href={story.href} target="_blank" rel="noreferrer" className={index === 0 ? "news-card large" : "news-card"} key={story.id}>
                   <img src={story.image} alt="" />
-                  <div><small>{newsTag(story)}</small><h2>{story.title}</h2><p>{story.text}</p><span>Đọc trên nabaden.vn ↗</span></div>
+                  <div>
+                    <small>{newsTag(story)}</small>
+                    <h2>{story.title}</h2>
+                    <p>{story.text}</p>
+                    <span>Đọc trên nabaden.vn ↗</span>
+                  </div>
                 </a>
               ))}
             </div>
           </>
         )}
 
+        {/* =========================================
+            TAB 6: KẾT NỐI & LIÊN HỆ (CONTACT)
+           ========================================= */}
         {tab === "contact" && (
           <>
-            <PageIntro eyebrow="Kết nối trực tiếp" title="NABADEN luôn sẵn sàng lắng nghe" text="Chọn kênh thuận tiện nhất để hỏi mùa vụ, sản phẩm, quà tặng hoặc lịch trải nghiệm." />
+            <PageIntro eyebrow="Kết nối trực tiếp" title="NABADEN luôn sẵn sàng đồng hành" text="Chọn kênh thuận tiện nhất để hỏi giá hôm nay, đặt hàng, đăng ký đối tác hoặc hẹn lịch trải nghiệm vườn." />
             <section className="contact-primary">
               <div className="contact-logo"><img src="/assets/nabaden-logo.webp" alt="NABADEN" /></div>
               <span>Hợp tác xã Nông nghiệp Mãng cầu Thạnh Tân</span>
-              <h2>0907 215 521</h2>
-              <div><a href="tel:0907215521">Gọi ngay</a><a href={ZALO_OA_URL}>Nhắn Zalo</a></div>
+              <h2>{HOTLINE_DISPLAY}</h2>
+              <div>
+                <a href={`tel:${HOTLINE_PHONE}`}>Gọi ngay</a>
+                <a href={ZALO_OA_URL} target="_blank" rel="noreferrer">Nhắn Zalo OA</a>
+              </div>
             </section>
             <div className="contact-list">
-              <a href="https://maps.app.goo.gl/r8JkWUTPksY2CjsB7"><span>⌖</span><div><b>Địa chỉ vườn</b><small>Lộ 10, ấp Thạnh Trung, Phường Bình Minh, Tây Ninh</small></div><i>›</i></a>
-              <a href="https://www.facebook.com/nabaden.vn/"><span>f</span><div><b>Facebook NABADEN</b></div><i>›</i></a>
-              <a href="https://www.tiktok.com/@mangcaubaden"><span>♪</span><div><b>TikTok @mangcaubaden</b><small>Video từ vườn và sản phẩm</small></div><i>›</i></a>
-              <button onClick={shareApp}><span>↗</span><div><b>Chia sẻ ứng dụng</b><small>Gửi NABADEN cho bạn bè</small></div><i>›</i></button>
-              <button onClick={requestInstall}><span>＋</span><div><b>Cài lên màn hình chính</b><small>Mở nhanh như một ứng dụng</small></div><i>›</i></button>
+              <button onClick={() => changeTab("partner")}>
+                <span>🤝</span>
+                <div><b>Hợp tác phân phối & CTV</b><small>Tuyển đối tác toàn quốc, vốn 0đ, chiết khấu hấp dẫn</small></div>
+                <i>›</i>
+              </button>
+              <a href="https://maps.app.goo.gl/r8JkWUTPksY2CjsB7" target="_blank" rel="noreferrer">
+                <span>⌖</span>
+                <div><b>Địa chỉ vườn</b><small>Lộ 10, ấp Thạnh Trung, Phường Bình Minh, Tây Ninh</small></div>
+                <i>›</i>
+              </a>
+              <a href="https://www.facebook.com/nabaden.vn/" target="_blank" rel="noreferrer">
+                <span>f</span>
+                <div><b>Facebook NABADEN</b><small>Cập nhật hoạt động thường nhật</small></div>
+                <i>›</i>
+              </a>
+              <a href="https://www.tiktok.com/@mangcaubaden" target="_blank" rel="noreferrer">
+                <span>♪</span>
+                <div><b>TikTok @mangcaubaden</b><small>Video từ vườn và quy trình đóng gói</small></div>
+                <i>›</i>
+              </a>
+              <button onClick={shareApp}>
+                <span>↗</span>
+                <div><b>Chia sẻ ứng dụng</b><small>Gửi NABADEN cho bạn bè & đối tác</small></div>
+                <i>›</i>
+              </button>
+              <button onClick={requestInstall}>
+                <span>＋</span>
+                <div><b>Cài lên màn hình chính</b><small>Mở nhanh như một ứng dụng điện thoại</small></div>
+                <i>›</i>
+              </button>
             </div>
-            <a className="certificate-card" href="/assets/chung-nhan-ocop-3-sao.jpg" target="_blank">
+            <a className="certificate-card" href="/assets/chung-nhan-ocop-3-sao.jpg" target="_blank" rel="noreferrer">
               <img src="/assets/chung-nhan-ocop-3-sao.jpg" alt="Chứng nhận OCOP 3 sao" />
-              <div><span>Chứng nhận chính thức</span><h3>Quả Mãng cầu (Na) ta · OCOP 3 sao</h3><p>Mã số 72-703-01-2023</p></div>
+              <div>
+                <span>Chứng nhận chính thức</span>
+                <h3>Quả Mãng cầu (Na) ta · OCOP 3 sao</h3>
+                <p>Mã số 72-703-01-2023 · HTX Mãng Cầu Thạnh Tân</p>
+              </div>
             </a>
-            <div className="saved-card"><span>♡ {favorites.length} sản phẩm yêu thích</span><span>◫ {basket.length} yêu cầu đang lưu</span></div>
+            <div className="saved-card">
+              <span>♡ {favorites.length} sản phẩm yêu thích</span>
+              <span>◫ {basket.length} yêu cầu đang lưu</span>
+            </div>
           </>
         )}
       </div>
 
+      {/* Nút Giỏ Quan Tâm */}
       {basket.length > 0 && (
         <button className="basket-fab with-assistant" onClick={() => setBasketOpen(true)} aria-label={`Mở giỏ quan tâm có ${basket.length} sản phẩm`}>
           <span>🛒</span><b>{basket.length}</b><em>Giỏ quan tâm</em>
         </button>
       )}
 
+      {/* Trợ lý NABADEN FAB */}
       <button className="assistant-fab" onClick={() => setSupportOpen(true)} aria-label="Mở trợ lý hỗ trợ NABADEN">
-        <span className="assistant-bubble"><small>Trợ lý NABADEN</small><b>Bạn cần hỗ trợ gì?</b></span>
-        <span className="assistant-avatar"><img src="/assets/nabaden-assistant.png" alt="" /><i /></span>
+        <span className="assistant-bubble">
+          <small>Trợ lý NABADEN</small>
+          <b>Bạn cần hỗ trợ gì?</b>
+        </span>
+        <span className="assistant-avatar">
+          <img src="/assets/nabaden-assistant.png" alt="" />
+          <i />
+        </span>
       </button>
 
+      {/* Bottom Nav 6 Tabs */}
       <nav className="bottom-nav" aria-label="Điều hướng ứng dụng">
         {navItems.map((item) => (
-          <button key={item.id} className={tab === item.id ? "active" : ""} onClick={() => changeTab(item.id)}>
-            <span>{item.icon}</span><small>{item.label}</small>
+          <button
+            key={item.id}
+            className={`${tab === item.id ? "active" : ""} ${item.highlight ? "partner-tab" : ""}`}
+            onClick={() => changeTab(item.id)}
+          >
+            <span>{item.icon}</span>
+            <small>{item.label}</small>
           </button>
         ))}
       </nav>
 
+      {/* Modal Giỏ Quan Tâm */}
       {basketOpen && (
         <Modal title={`Giỏ quan tâm · ${basket.length}`} onClose={() => setBasketOpen(false)}>
           <div className="basket-list">
             {selectedProducts.map((product) => (
-              <div key={product.id}><img src={product.image} alt="" /><div><b>{product.name}</b><small>{product.note}</small></div><button onClick={() => removeFromBasket(product.id)} aria-label={`Bỏ ${product.name} khỏi giỏ`}>×</button></div>
+              <div key={product.id}>
+                <img src={product.image} alt="" />
+                <div>
+                  <b>{product.name}</b>
+                  <small>{product.note}</small>
+                </div>
+                <button onClick={() => removeFromBasket(product.id)} aria-label={`Bỏ ${product.name} khỏi giỏ`}>×</button>
+              </div>
             ))}
           </div>
           <div className="consultation-copy">
-            <div><span>Tin nhắn tư vấn đã soạn sẵn</span><button onClick={copyConsultationMessage}>Sao chép</button></div>
+            <div>
+              <span>Tin nhắn tư vấn đã soạn sẵn</span>
+              <button onClick={copyConsultationMessage}>Sao chép</button>
+            </div>
             <textarea value={consultationMessage} readOnly aria-label="Nội dung tin nhắn tư vấn" />
           </div>
-          <div className="zalo-guide"><b>1</b><span>Sao chép nội dung</span><i>→</i><b>2</b><span>Mở Zalo OA</span><i>→</i><b>3</b><span>Dán và gửi</span></div>
+          <div className="zalo-guide">
+            <b>1</b><span>Sao chép</span><i>→</i>
+            <b>2</b><span>Mở Zalo OA</span><i>→</i>
+            <b>3</b><span>Dán và gửi</span>
+          </div>
           <a className="zalo-consult-button" href={ZALO_OA_URL} target="_blank" rel="noreferrer" onClick={() => void copyConsultationMessage()}>
-            <span>Zalo</span><div><b>Tư vấn qua Zalo OA</b></div><i>→</i>
+            <span>Zalo</span>
+            <div><b>Tư vấn qua Zalo OA NABADEN</b><small>Tự động sao chép nội dung</small></div>
+            <i>→</i>
           </a>
         </Modal>
       )}
 
+      {/* Modal Trợ Lý Hỗ Trợ */}
       {supportOpen && (
         <Modal title="Bạn cần hỗ trợ gì?" onClose={() => setSupportOpen(false)}>
           <div className="support-intro">
             <img src="/assets/nabaden-assistant.png" alt="Trợ lý NABADEN" />
-            <div><b>Trợ lý NABADEN</b><span>Chọn nhu cầu để được hỗ trợ nhanh.</span></div>
+            <div>
+              <b>Trợ lý NABADEN</b>
+              <span>Chọn nhu cầu để được hỗ trợ nhanh nhất.</span>
+            </div>
           </div>
           <div className="support-options">
+            <button onClick={() => { setSupportOpen(false); changeTab("partner"); }}>
+              <span className="support-option-icon partner">🤝</span>
+              <div>
+                <b>Trở thành đối tác / CTV</b>
+                <small>Tuyển CTV vốn 0đ, nhà phân phối toàn quốc</small>
+              </div>
+              <i>→</i>
+            </button>
+            <button onClick={() => { setSupportOpen(false); openBooking(); }}>
+              <span className="support-option-icon booking">🌿</span>
+              <div>
+                <b>Đặt lịch hái quả tại vườn</b>
+                <small>Chọn ngày, khung giờ và số khách tham quan</small>
+              </div>
+              <i>→</i>
+            </button>
+            <a href={ZALO_OA_URL} target="_blank" rel="noreferrer">
+              <span className="support-option-icon zalo">Zalo</span>
+              <div>
+                <b>Đặt mua sản phẩm & Báo giá hôm nay</b>
+                <small>Trao đổi trực tiếp với Zalo OA NABADEN</small>
+              </div>
+              <i>→</i>
+            </a>
             {!isInstalled ? (
               <button onClick={() => { setSupportOpen(false); void requestInstall(); }}>
                 <span className="support-option-icon">＋</span>
-                <div><b>Cài ứng dụng NABADEN</b><small>Thêm vào màn hình chính để mở nhanh</small></div><i>→</i>
+                <div>
+                  <b>Cài ứng dụng NABADEN</b>
+                  <small>Thêm vào màn hình chính để mở nhanh</small>
+                </div>
+                <i>→</i>
               </button>
             ) : (
               <div className="support-installed">
-                <span>✓</span><div><b>Ứng dụng đã được cài</b><small>Bạn đang sử dụng NABADEN như một ứng dụng</small></div>
+                <span>✓</span>
+                <div>
+                  <b>Ứng dụng đã được cài đặt</b>
+                  <small>Bạn đang sử dụng NABADEN như một ứng dụng</small>
+                </div>
               </div>
             )}
-            <button onClick={() => { setSupportOpen(false); openBooking(); }}>
-              <span className="support-option-icon booking">🌿</span>
-              <div><b>Đặt lịch hái quả tại vườn</b><small>Chọn ngày, khung giờ và số khách tham quan</small></div><i>→</i>
-            </button>
-            <a href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer">
-              <span className="support-option-icon partner">🤝</span>
-              <div><b>Trở thành đối tác</b><small>Đăng ký hợp tác phân phối cùng NABADEN</small></div><i>→</i>
-            </a>
-            <a href={ZALO_OA_URL} target="_blank" rel="noreferrer">
-              <span className="support-option-icon zalo">Zalo</span>
-              <div><b>Đặt mua sản phẩm</b><small>Trao đổi trực tiếp với Zalo OA NABADEN</small></div><i>→</i>
-            </a>
           </div>
         </Modal>
       )}
 
+      {/* Modal Đặt Lịch Vườn */}
       {bookingOpen && (
         <Modal title="Đặt lịch hái quả tại vườn" onClose={closeBooking}>
           {bookingMessage ? (
             <div className="booking-ready">
-              <div className="booking-ready-title"><span>✓</span><div><b>Tin nhắn đã được sao chép</b><small>Hãy dán nội dung này vào cuộc trò chuyện Zalo OA.</small></div></div>
+              <div className="booking-ready-title">
+                <span>✓</span>
+                <div>
+                  <b>Tin nhắn đã được sao chép</b>
+                  <small>Hãy dán nội dung này vào cuộc trò chuyện Zalo OA.</small>
+                </div>
+              </div>
               <div className="consultation-copy">
                 <div><span>NỘI DUNG ĐẶT LỊCH</span><button onClick={() => void copyBookingMessage()}>Sao chép lại</button></div>
                 <textarea value={bookingMessage} readOnly aria-label="Nội dung tin nhắn đặt lịch" />
@@ -634,11 +1275,25 @@ export default function Home() {
             </div>
           ) : (
             <form className="booking-form" onSubmit={submitBooking}>
-              <label>Họ và tên<input name="name" required placeholder="Tên người liên hệ" /></label>
-              <label>Số điện thoại<input name="phone" required inputMode="tel" placeholder="09xx xxx xxx" /></label>
-              <div><label>Ngày dự kiến<input name="date" type="date" required /></label><label>Khung giờ<select name="time" defaultValue="Buổi sáng"><option>Buổi sáng</option><option>Buổi chiều</option><option>Chưa xác định</option></select></label></div>
-              <div><label>Số người lớn<input name="adults" type="number" min="1" defaultValue="2" required /></label><label>Số trẻ em<input name="children" type="number" min="0" defaultValue="0" required /></label></div>
-              <label>Nhu cầu<select name="program" defaultValue="Trải nghiệm hái quả tại vườn"><option>Trải nghiệm hái quả tại vườn</option><option>Tham quan và tìm hiểu vùng trồng</option><option>Chương trình dành cho trường học</option><option>Đoàn doanh nghiệp / đối tác</option></select></label>
+              <label>Họ và tên *<input name="name" required placeholder="Tên người liên hệ" /></label>
+              <label>Số điện thoại *<input name="phone" required inputMode="tel" placeholder="09xx xxx xxx" /></label>
+              <div>
+                <label>Ngày dự kiến<input name="date" type="date" required /></label>
+                <label>Khung giờ<select name="time" defaultValue="Buổi sáng"><option>Buổi sáng</option><option>Buổi chiều</option><option>Chưa xác định</option></select></label>
+              </div>
+              <div>
+                <label>Số người lớn<input name="adults" type="number" min="1" defaultValue="2" required /></label>
+                <label>Số trẻ em<input name="children" type="number" min="0" defaultValue="0" required /></label>
+              </div>
+              <label>
+                Nhu cầu
+                <select name="program" defaultValue="Trải nghiệm hái quả tại vườn">
+                  <option>Trải nghiệm hái quả tại vườn</option>
+                  <option>Tham quan và tìm hiểu vùng trồng</option>
+                  <option>Chương trình dành cho trường học</option>
+                  <option>Đoàn doanh nghiệp / đối tác</option>
+                </select>
+              </label>
               <label>Ghi chú<textarea name="note" placeholder="Độ tuổi trẻ em, nhu cầu riêng hoặc thời gian thuận tiện..." /></label>
               <p className="modal-note">Hoạt động phụ thuộc mùa vụ và thời tiết. NABADEN sẽ liên hệ xác nhận trước khi lịch có hiệu lực.</p>
               <button className="primary-wide" type="submit">Sao chép và mở Zalo OA →</button>
@@ -647,9 +1302,14 @@ export default function Home() {
         </Modal>
       )}
 
+      {/* Modal Hướng Dẫn Cài iOS */}
       {showIosHelp && (
         <Modal title="Thêm vào màn hình chính" onClose={() => setShowIosHelp(false)}>
-          <div className="install-steps"><div><b>1</b><span>Mở menu <strong>Chia sẻ</strong> của trình duyệt</span></div><div><b>2</b><span>Chọn <strong>Thêm vào MH chính</strong></span></div><div><b>3</b><span>Nhấn <strong>Thêm</strong> để hoàn tất</span></div></div>
+          <div className="install-steps">
+            <div><b>1</b><span>Mở menu <strong>Chia sẻ</strong> của trình duyệt Safari</span></div>
+            <div><b>2</b><span>Chọn <strong>Thêm vào Màn hình chính</strong> (Add to Home Screen)</span></div>
+            <div><b>3</b><span>Nhấn <strong>Thêm</strong> để hoàn tất</span></div>
+          </div>
         </Modal>
       )}
 
@@ -659,26 +1319,89 @@ export default function Home() {
 }
 
 function SectionHead({ eyebrow, title, action, onAction }: { eyebrow: string; title: string; action: string; onAction: () => void }) {
-  return <div className="section-head"><div><span>{eyebrow}</span><h2>{title}</h2></div><button onClick={onAction}>{action} →</button></div>;
+  return (
+    <div className="section-head">
+      <div><span>{eyebrow}</span><h2>{title}</h2></div>
+      <button onClick={onAction}>{action} →</button>
+    </div>
+  );
 }
 
 function PageIntro({ eyebrow, title, text }: { eyebrow: string; title: string; text: string }) {
-  return <section className="page-intro"><span className="eyebrow">{eyebrow}</span><h1>{title}</h1><p>{text}</p></section>;
+  return (
+    <section className="page-intro">
+      <span className="eyebrow">{eyebrow}</span>
+      <h1>{title}</h1>
+      <p>{text}</p>
+    </section>
+  );
 }
 
-function ProductCard({ product, favorite, inBasket, onFavorite, onBasket, compact = false }: { product: typeof products[number]; favorite: boolean; inBasket: boolean; onFavorite: (id: string) => void; onBasket: (id: string) => void; compact?: boolean }) {
+function ProductCard({
+  product,
+  favorite,
+  inBasket,
+  onFavorite,
+  onBasket,
+  compact = false,
+}: {
+  product: typeof products[number];
+  favorite: boolean;
+  inBasket: boolean;
+  onFavorite: (id: string) => void;
+  onBasket: (id: string) => void;
+  compact?: boolean;
+}) {
   return (
     <article className={`product-card ${compact ? "compact" : ""}`}>
-      <div className="product-image"><img src={product.image} alt={product.name} />{product.ocop && <span>OCOP 3★</span>}<button onClick={() => onFavorite(product.id)} aria-label={favorite ? "Bỏ yêu thích" : "Thêm yêu thích"}>{favorite ? "♥" : "♡"}</button></div>
-      <div className="product-info"><small>{product.category}</small><h3>{product.name}</h3><p>{product.description}</p><div><span>{product.note}</span><button className={inBasket ? "selected" : ""} onClick={() => onBasket(product.id)}>{inBasket ? "✓ Trong giỏ" : "+ Quan tâm"}</button></div></div>
+      <div className="product-image">
+        <img src={product.image} alt={product.name} />
+        {product.ocop && <span className="product-badge-ocop">OCOP 3★</span>}
+        <button onClick={() => onFavorite(product.id)} aria-label={favorite ? "Bỏ yêu thích" : "Thêm yêu thích"}>
+          {favorite ? "♥" : "♡"}
+        </button>
+      </div>
+      <div className="product-info">
+        <span className="product-tag">{product.tag || product.category}</span>
+        <h3>{product.name}</h3>
+        <p>{product.description}</p>
+        <div className="product-actions-box">
+          <div className="product-note-line">
+            <span>{product.note}</span>
+          </div>
+          <button
+            className={`product-btn-add ${inBasket ? "selected" : ""}`}
+            onClick={() => onBasket(product.id)}
+          >
+            {inBasket ? "✓ Trong giỏ quan tâm" : "+ Quan tâm tư vấn"}
+          </button>
+        </div>
+      </div>
     </article>
   );
 }
 
 function Program({ number, title, text }: { number: string; title: string; text: string }) {
-  return <article><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div><i>→</i></article>;
+  return (
+    <article>
+      <span>{number}</span>
+      <div><h3>{title}</h3><p>{text}</p></div>
+      <i>→</i>
+    </article>
+  );
 }
 
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
-  return <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}><section className="modal-sheet" role="dialog" aria-modal="true" aria-label={title}><div className="modal-handle" /><header><h2>{title}</h2><button onClick={onClose} aria-label="Đóng">×</button></header>{children}</section></div>;
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <section className="modal-sheet" role="dialog" aria-modal="true" aria-label={title}>
+        <div className="modal-handle" />
+        <header>
+          <h2>{title}</h2>
+          <button onClick={onClose} aria-label="Đóng">×</button>
+        </header>
+        {children}
+      </section>
+    </div>
+  );
 }
