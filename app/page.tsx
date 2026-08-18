@@ -225,15 +225,23 @@ const productFaqs = [
   },
   {
     q: "Vườn có hỗ trợ giao hàng đi TP.HCM, Hà Nội và các tỉnh không?",
-    a: "Có. NABADEN hỗ trợ đóng thùng chuyên dụng chống sốc và gửi xe khách trong ngày (về TP.HCM, miền Tây, miền Đông) hoặc chuyển phát nhanh đường hàng không 1-2 ngày ra Hà Nội và các tỉnh phía Bắc, đảm bảo trái nguyên vẹn không bị dập.",
+    a: "Có. NABADEN hỗ trợ đóng thùng carton 3-5 lớp bọc lưới xốp chuyên dụng và gửi xe khách trong ngày (về TP.HCM, Đông Nam Bộ, Miền Tây) hoặc chuyển phát hỏa tốc đường hàng không 1-2 ngày ra Hà Nội và các tỉnh phía Bắc, đảm bảo trái nguyên vẹn không lo dập nát.",
   },
   {
-    q: "Chính sách bảo hành hoặc đổi trả sản phẩm hư hỏng như thế nào?",
-    a: "NABADEN cam kết bảo hành 1 đổi 1 hoặc hoàn tiền tương ứng nếu quả bị dập nát, hư hỏng trong quá trình vận chuyển. Bạn chỉ cần gửi ảnh/video mở thùng cho NABADEN qua Zalo OA.",
+    q: "Cách bảo quản mãng cầu sau khi chín để ăn ngon dẻo nhất?",
+    a: "Khi trái vừa mềm tay (đạt độ chín dẻo thơm nhất), bạn nên thưởng thức ngay hoặc bọc màng thực phẩm để ngăn mát tủ lạnh (8-12°C) dùng dần trong 2-3 ngày. Vị ngọt mát lạnh của thịt quả mãng cầu chín dẻo sẽ ngon gấp bội.",
   },
   {
-    q: "Làm sao để nhận báo giá sỉ hoặc hợp tác phân phối?",
-    a: "Bạn có thể chuyển sang tab 'Hợp tác' trên ứng dụng để gửi đăng ký, hoặc gọi trực tiếp Hotline 0907 215 521 / nhắn tin Zalo OA để nhận bảng giá sỉ & chiết khấu theo ngày.",
+    q: "Mãng cầu NABADEN có đạt chuẩn an toàn VietGAP sạch không?",
+    a: "Vùng trồng Thạnh Tân dưới chân Núi Bà Đen áp dụng chuẩn VietGAP, bọc trái 100% bằng túi bảo vệ chuyên dụng trực tiếp trên cây từ khi trái còn nhỏ, cách ly hoàn toàn sâu bọ và cam kết sạch an toàn tuyệt đối cho sức khỏe.",
+  },
+  {
+    q: "Chính sách bảo hành đền bù hoặc đổi trả sản phẩm hư hỏng ra sao?",
+    a: "NABADEN cam kết bảo hành 1-đổi-1 hoặc hoàn tiền tương ứng nếu quả bị dập nát, hư hỏng trong quá trình vận chuyển. Quý khách chỉ cần quay clip/chụp ảnh mở thùng hàng và gửi qua Zalo OA NABADEN.",
+  },
+  {
+    q: "Làm sao để nhận báo giá sỉ hoặc đăng ký làm CTV / Đại lý?",
+    a: "Quý khách vui lòng bấm sang tab '🤝 Hợp tác' trên ứng dụng để gửi thông tin đăng ký, hoặc gọi trực tiếp Hotline 0907 215 521 / nhắn tin Zalo OA để nhận bảng giá sỉ & ưu đãi chiết khấu mới nhất hôm nay.",
   },
 ];
 
@@ -303,6 +311,7 @@ export default function Home() {
   const [partnerRole, setPartnerRole] = useState<"ctv" | "npp">("ctv");
   const [formRole, setFormRole] = useState("Cộng tác viên (CTV)");
   const [partnerSubmittedMsg, setPartnerSubmittedMsg] = useState("");
+  const [seniorMode, setSeniorMode] = useState(false);
 
   useEffect(() => {
     const handleInstall = (event: Event) => {
@@ -528,13 +537,23 @@ export default function Home() {
   };
 
   return (
-    <main className="app-shell">
+    <main className={`app-shell ${seniorMode ? "senior-mode" : ""}`}>
       <header className="topbar">
         <button className="brand" onClick={() => changeTab("home")} aria-label="Về trang chủ">
           <img src="/assets/nabaden-logo.webp" alt="NABADEN" />
           <span>OCOP 3★</span>
         </button>
         <div className="top-actions">
+          <button
+            className={`top-senior-btn ${seniorMode ? "active" : ""}`}
+            onClick={() => {
+              setSeniorMode(!seniorMode);
+              notify(seniorMode ? "Đã về cỡ chữ chuẩn" : "Đã bật Chữ Lớn cho người lớn tuổi 👁️");
+            }}
+            aria-label="Chế độ chữ lớn"
+          >
+            {seniorMode ? "👁️ Chữ To" : "👁️ Chữ Lớn"}
+          </button>
           <button className="top-partner-btn" onClick={() => changeTab("partner")} aria-label="Mở trang hợp tác">
             <span>🤝</span> Hợp tác
           </button>
@@ -674,32 +693,38 @@ export default function Home() {
               </div>
             )}
 
-            {/* Bảng so sánh quy cách */}
+            {/* Bảng so sánh quy cách dạng thẻ mobile rõ đẹp */}
             <section className="specs-section">
               <span className="eyebrow">So sánh quy cách</span>
-              <h3>Bảng so sánh chi tiết các quy cách đóng gói</h3>
-              <p>Giúp bạn dễ dàng chọn lựa quy cách phù hợp cho mục đích biếu tặng, thưởng thức gia đình hoặc phân phối bán sỉ.</p>
-              <div className="specs-table-scroll">
-                <table className="specs-table">
-                  <thead>
-                    <tr>
-                      <th>Dòng sản phẩm</th>
-                      <th>Mục đích sử dụng</th>
-                      <th>Đóng gói</th>
-                      <th>Chính sách giao</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.slice(0, 3).map((item) => (
-                      <tr key={item.id}>
-                        <td><strong>{item.name}</strong><br /><small>{item.tag}</small></td>
-                        <td>{item.target}</td>
-                        <td>{item.pack}</td>
-                        <td>{item.shipPolicy}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <h3>Chi tiết quy cách đóng gói Mãng Cầu NABADEN</h3>
+              <p>Giúp quý khách dễ dàng lựa chọn quy cách phù hợp cho mục đích biếu tặng, gia đình thưởng thức hoặc nhập sỉ phân phối.</p>
+              <div className="spec-cards-stack">
+                {products.slice(0, 3).map((item) => (
+                  <article key={item.id} className="spec-card-item">
+                    <div className="spec-card-head">
+                      <h4 className="spec-card-title">{item.name}</h4>
+                      <span className="spec-card-tag">{item.tag}</span>
+                    </div>
+                    <div className="spec-card-rows">
+                      <div className="spec-card-row">
+                        <span className="spec-card-label">🎯 Mục đích sử dụng:</span>
+                        <span className="spec-card-value">{item.target}</span>
+                      </div>
+                      <div className="spec-card-row">
+                        <span className="spec-card-label">📦 Quy cách đóng gói:</span>
+                        <span className="spec-card-value">{item.pack}</span>
+                      </div>
+                      <div className="spec-card-row">
+                        <span className="spec-card-label">🍈 Đặc điểm trái:</span>
+                        <span className="spec-card-value">{item.fruitSpec}</span>
+                      </div>
+                      <div className="spec-card-row">
+                        <span className="spec-card-label">🚚 Chính sách giao hàng:</span>
+                        <span className="spec-card-value">{item.shipPolicy}</span>
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
             </section>
 
