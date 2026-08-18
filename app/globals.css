@@ -482,23 +482,7 @@ img { display: block; max-width: 100%; }
   font-size: 11px;
 }
 .basket-fab em { font-size: 12px; font-style: normal; }
-.basket-fab.with-assistant { bottom: calc(215px + env(safe-area-inset-bottom)); }
-
-.assistant-fab {
-  position: fixed;
-  z-index: 55;
-  right: max(12px, calc((100vw - 540px) / 2 + 12px));
-  bottom: calc(86px + env(safe-area-inset-bottom));
-  display: flex;
-  align-items: flex-end;
-  flex-direction: column;
-  gap: 6px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  filter: drop-shadow(0 12px 18px rgba(7,60,38,.22));
-}
+.assistant-fab { display: none !important; }
 .assistant-bubble {
   position: relative;
   display: flex;

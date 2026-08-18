@@ -1199,22 +1199,10 @@ export default function Home() {
 
       {/* Nút Giỏ Quan Tâm */}
       {basket.length > 0 && (
-        <button className="basket-fab with-assistant" onClick={() => setBasketOpen(true)} aria-label={`Mở giỏ quan tâm có ${basket.length} sản phẩm`}>
+        <button className="basket-fab" onClick={() => setBasketOpen(true)} aria-label={`Mở giỏ quan tâm có ${basket.length} sản phẩm`}>
           <span>🛒</span><b>{basket.length}</b><em>Giỏ quan tâm</em>
         </button>
       )}
-
-      {/* Trợ lý NABADEN FAB */}
-      <button className="assistant-fab" onClick={() => setSupportOpen(true)} aria-label="Mở trợ lý hỗ trợ NABADEN">
-        <span className="assistant-bubble">
-          <small>Trợ lý NABADEN</small>
-          <b>Bạn cần hỗ trợ gì?</b>
-        </span>
-        <span className="assistant-avatar">
-          <img src="/assets/nabaden-assistant.png" alt="" />
-          <i />
-        </span>
-      </button>
 
       {/* Bottom Nav 6 Tabs */}
       <nav className="bottom-nav" aria-label="Điều hướng ứng dụng">
