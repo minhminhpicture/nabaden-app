@@ -514,19 +514,19 @@ export default function Home() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const body = [
-      "Xin chào NABADEN, tôi muốn đăng ký HỢP TÁC PHÂN PHỐI:",
-      `Mô hình quan tâm: ${formRole}`,
-      `Họ và tên: ${data.get("name")}`,
-      `Số điện thoại (Zalo): ${data.get("phone")}`,
-      `Khu vực kinh doanh: ${data.get("region") || "Chưa ghi"}`,
-      `Kênh bán / Quy mô: ${data.get("channel") || "Chưa ghi"}`,
-      `Ghi chú & nhu cầu: ${data.get("note") || "Không có"}`,
+      "Xin chào NABADEN, tôi gửi ĐỀ XUẤT HỢP TÁC từ website:",
+      `- Hình thức đăng ký: ${formRole}`,
+      `- Họ và tên: ${data.get("name")}`,
+      `- Số điện thoại (Zalo): ${data.get("phone")}`,
+      `- Tỉnh / Thành phố: ${data.get("region") || "Chưa chọn"}`,
+      `- Kênh bán / Kinh nghiệm: ${data.get("channel") || "Chưa chọn"}`,
+      `- Ghi chú & nhu cầu: ${data.get("note") || "Không có"}`,
     ].join("\n");
     setPartnerSubmittedMsg(body);
     try {
       if (navigator.clipboard) {
         void navigator.clipboard.writeText(body)
-          .then(() => notify("Đã sao chép đề xuất · Hãy gửi vào Zalo OA"))
+          .then(() => notify("Đã sao chép đề xuất · Mở Zalo OA để dán & gửi"))
           .catch(() => notify("Hãy nhấn giữ nội dung để sao chép"));
       }
     } catch {
@@ -899,20 +899,21 @@ export default function Home() {
               </div>
             </section>
 
-            {/* Form đăng ký hợp tác trực tiếp */}
+            {/* Form đăng ký hợp tác trực tiếp chuẩn nabaden.vn/hop-tac */}
             <section className="partner-form-wrapper" id="partner-form">
               {partnerSubmittedMsg ? (
-                <div className="booking-ready">
-                  <div className="booking-ready-title">
-                    <span>✓</span>
+                <div className="partner-success-state">
+                  <div className="success-icon-badge" style={{ fontSize: "36px", textAlign: "center", marginBottom: "8px" }}>🎉</div>
+                  <h3 className="success-title" style={{ fontFamily: "Lora, serif", fontSize: "24px", color: "var(--green)", textAlign: "center", margin: "0 0 6px" }}>
+                    Đăng Ký Thành Công!
+                  </h3>
+                  <p className="success-subtitle" style={{ textAlign: "center", color: "var(--muted)", fontSize: "14px", margin: "0 0 16px" }}>
+                    Đề xuất của bạn đã được khởi tạo và sao chép. Hãy mở Zalo OA đối tác NABADEN để gửi tin nhắn ngay.
+                  </p>
+                  
+                  <div className="consultation-copy" style={{ marginBottom: "16px" }}>
                     <div>
-                      <b>Đề xuất hợp tác đã được sao chép!</b>
-                      <small>Hãy dán nội dung này vào cuộc trò chuyện Zalo OA để NABADEN phản hồi ngay.</small>
-                    </div>
-                  </div>
-                  <div className="consultation-copy">
-                    <div>
-                      <span>NỘI DUNG ĐỀ XUẤT HỢP TÁC</span>
+                      <span>NỘI DUNG ĐỀ XUẤT ĐÃ SAO CHÉP</span>
                       <button onClick={() => {
                         void navigator.clipboard.writeText(partnerSubmittedMsg);
                         notify("Đã sao chép lại đề xuất hợp tác");
@@ -920,94 +921,141 @@ export default function Home() {
                     </div>
                     <textarea value={partnerSubmittedMsg} readOnly aria-label="Nội dung đề xuất hợp tác" />
                   </div>
-                  <div className="zalo-guide">
+
+                  <div className="zalo-guide" style={{ marginBottom: "16px" }}>
                     <b>1</b><span>Mở Zalo OA</span><i>→</i>
                     <b>2</b><span>Dán đề xuất</span><i>→</i>
                     <b>3</b><span>Nhấn gửi</span>
                   </div>
-                  <div className="partner-form-btns" style={{ marginTop: "12px" }}>
+
+                  <div className="partner-form-btns">
                     <a className="btn-submit-partner" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer">
-                      <span>Zalo</span> Mở Zalo OA đối tác ngay ↗
+                      <span>⚡</span> Mở Zalo OA NABADEN Ngay ↗
                     </a>
                     <button
                       type="button"
                       className="btn-call-partner"
                       onClick={() => setPartnerSubmittedMsg("")}
                     >
-                      <span>↺</span> Điền lại thông tin khác
+                      <span>↺</span> Điền Đề Xuất Khác
                     </button>
                   </div>
                 </div>
               ) : (
                 <>
                   <div className="partner-form-head">
-                    <span className="form-tag">Đăng ký hợp tác</span>
-                    <h3>Gửi đề xuất hợp tác cùng NABADEN</h3>
-                    <p>Điền thông tin bên dưới, hệ thống sẽ hỗ trợ bạn kết nối nhanh với bộ phận phụ trách đối tác của NABADEN.</p>
+                    <span className="form-tag">ĐĂNG KÝ HỢP TÁC</span>
+                    <h3>Gia Nhập Mạng Lưới Đối Tác &amp; CTV NABADEN</h3>
+                    <p>Vui lòng điền thông tin để đội ngũ NABADEN liên hệ gửi chính sách chiết khấu và trao đổi trực tiếp qua Zalo.</p>
                   </div>
 
                   <form className="partner-form" onSubmit={submitPartnerForm}>
                     <label>
-                      Hình thức bạn muốn hợp tác
+                      Bạn muốn đăng ký theo hình thức: *
                       <div className="form-role-select-grid">
                         {[
-                          "Cộng tác viên (CTV)",
-                          "Nhà Phân Phối / Đại Lý",
-                          "Cửa hàng trái cây sạch",
-                          "Khách mua sỉ sự kiện",
+                          { id: "Cộng tác viên (CTV)", label: "🌱 Cộng Tác Viên (CTV)", sub: "Bán theo đơn, không ôm hàng, nhận chiết khấu" },
+                          { id: "Nhà Phân Phối / Đại Lý", label: "👑 Nhà Phân Phối / Đại Lý", sub: "Nhập số lượng lớn, giá sỉ tại vườn" },
                         ].map((role) => (
                           <button
                             type="button"
-                            key={role}
-                            className={`form-role-card ${formRole === role ? "active" : ""}`}
-                            onClick={() => setFormRole(role)}
+                            key={role.id}
+                            className={`form-role-card ${formRole === role.id ? "active" : ""}`}
+                            onClick={() => setFormRole(role.id)}
+                            style={{ flexDirection: "column", alignItems: "flex-start", gap: "2px", padding: "12px 10px" }}
                           >
-                            <span>{formRole === role ? "●" : "○"}</span> {role}
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13.5px", fontWeight: "800" }}>
+                              <span>{formRole === role.id ? "●" : "○"}</span> {role.label}
+                            </div>
+                            <small style={{ color: "var(--muted)", fontSize: "11px", marginLeft: "18px", lineHeight: "1.3" }}>{role.sub}</small>
                           </button>
                         ))}
                       </div>
                     </label>
 
-                    {formRole.includes("CTV") || formRole.includes("Cộng tác viên") ? (
-                      <div className="benefit-callout ctv" style={{ margin: "6px 0 10px" }}>
+                    {formRole.includes("CTV") || formRole.includes("Cộng Tác Viên") ? (
+                      <div className="benefit-callout ctv" style={{ margin: "4px 0 10px" }}>
                         <span style={{ fontSize: "20px" }}>💡</span>
-                        <span><b>Quyền lợi CTV:</b> Vốn 0đ, không ôm hàng. NABADEN hỗ trợ hái tại vườn, bọc xốp, đóng thùng, ship COD và chiết khấu hấp dẫn từng đơn.</span>
+                        <span><b>Chính sách CTV:</b> Không bắt buộc ôm hàng. NABADEN hỗ trợ các khâu hái trái tại vườn, bọc xốp, đóng thùng, gửi hàng và thu hộ COD, đối soát chiết khấu định kỳ cùng bạn.</span>
                       </div>
                     ) : (
-                      <div className="benefit-callout npp" style={{ margin: "6px 0 10px" }}>
+                      <div className="benefit-callout npp" style={{ margin: "4px 0 10px" }}>
                         <span style={{ fontSize: "20px" }}>⭐</span>
-                        <span><b>Quyền lợi NPP / Đại lý:</b> Báo giá sỉ trực tiếp từ HTX Thạnh Tân, ưu tiên nguồn hàng vụ nghịch, hỗ trợ tem OCOP 3★ & VietGAP.</span>
+                        <span><b>Chính sách NPP / Đại Lý:</b> Báo giá sỉ ưu đãi nhất tận vườn từ HTX Thạnh Tân, ưu tiên nguồn hàng vụ nghịch, hỗ trợ tem OCOP 3★, VietGAP & hình ảnh truyền thông.</span>
                       </div>
                     )}
 
                     <label>
                       Họ và tên của bạn *
-                      <input name="name" required placeholder="Ví dụ: Nguyễn Văn A" />
+                      <input name="name" required placeholder="Ví dụ: Nguyễn Văn An" />
                     </label>
 
                     <label>
-                      Số điện thoại / Zalo liên hệ *
-                      <input name="phone" required inputMode="tel" placeholder="09xx xxx xxx" />
+                      Số điện thoại (có Zalo) *
+                      <input name="phone" required inputMode="tel" placeholder="Ví dụ: 0907 215 521" />
                     </label>
 
                     <label>
-                      Tỉnh / Thành phố bạn hoạt động
-                      <input name="region" placeholder="Ví dụ: TP. Hồ Chí Minh, Hà Nội, Tây Ninh,..." />
+                      Tỉnh / Thành phố sinh sống *
+                      <select name="region" required className="form-select">
+                        <option value="">-- Chọn Tỉnh / Thành phố --</option>
+                        <optgroup label="⭐ Tỉnh / Thành phố trọng điểm">
+                          <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+                          <option value="Hà Nội">Hà Nội</option>
+                          <option value="Tây Ninh">Tây Ninh</option>
+                          <option value="Bình Dương">Bình Dương</option>
+                          <option value="Đồng Nai">Đồng Nai</option>
+                          <option value="Bà Rịa - Vũng Tàu">Bà Rịa - Vũng Tàu</option>
+                          <option value="Đà Nẵng">Đà Nẵng</option>
+                          <option value="Cần Thơ">Cần Thơ</option>
+                          <option value="Hải Phòng">Hải Phòng</option>
+                        </optgroup>
+                        <optgroup label="📋 Danh sách các Tỉnh / Thành">
+                          <option value="An Giang">An Giang</option>
+                          <option value="Bến Tre">Bến Tre</option>
+                          <option value="Bình Định">Bình Định</option>
+                          <option value="Bình Thuận">Bình Thuận</option>
+                          <option value="Cà Mau">Cà Mau</option>
+                          <option value="Đắk Lắk">Đắk Lắk</option>
+                          <option value="Đồng Tháp">Đồng Tháp</option>
+                          <option value="Gia Lai">Gia Lai</option>
+                          <option value="Khánh Hòa">Khánh Hòa</option>
+                          <option value="Kiên Giang">Kiên Giang</option>
+                          <option value="Lâm Đồng">Lâm Đồng</option>
+                          <option value="Long An">Long An</option>
+                          <option value="Nghệ An">Nghệ An</option>
+                          <option value="Ninh Bình">Ninh Bình</option>
+                          <option value="Quảng Nam">Quảng Nam</option>
+                          <option value="Quảng Ngãi">Quảng Ngãi</option>
+                          <option value="Quảng Ninh">Quảng Ninh</option>
+                          <option value="Thanh Hóa">Thanh Hóa</option>
+                          <option value="Thừa Thiên Huế">Thừa Thiên Huế</option>
+                          <option value="Tiền Giang">Tiền Giang</option>
+                          <option value="Vĩnh Long">Vĩnh Long</option>
+                          <option value="Tỉnh thành khác">Tỉnh thành khác</option>
+                        </optgroup>
+                      </select>
                     </label>
 
                     <label>
-                      Kênh bán hàng hoặc số lượng dự kiến
-                      <input name="channel" placeholder="Ví dụ: Facebook / TikTok / Cửa hàng mặt phố / 50kg mỗi tuần" />
+                      Kênh bán / Kinh nghiệm hiện tại
+                      <select name="channel" className="form-select">
+                        <option value="Bán online qua Facebook / Zalo / TikTok">Bán online qua Facebook / Zalo / TikTok</option>
+                        <option value="Cửa hàng trái cây / Thực phẩm sạch">Cửa hàng trái cây / Thực phẩm sạch</option>
+                        <option value="Vựa hoa quả / Đại lý sỉ nông sản">Vựa hoa quả / Đại lý sỉ nông sản</option>
+                        <option value="Bán cho người thân, bạn bè, đồng nghiệp">Bán cho người thân, bạn bè, đồng nghiệp</option>
+                        <option value="Chưa có kinh nghiệm (muốn được hỗ trợ)">Chưa có kinh nghiệm (muốn được hỗ trợ)</option>
+                      </select>
                     </label>
 
                     <label>
-                      Ghi chú thêm (nếu có)
-                      <textarea name="note" placeholder="Câu hỏi về chiết khấu, mẫu thử hoặc thời gian thuận tiện trao đổi..." />
+                      Ghi chú / Nhu cầu cụ thể
+                      <textarea name="note" placeholder="Ví dụ: Em muốn tìm hiểu chính sách CTV bán khu vực Quận 7..." />
                     </label>
 
                     <div className="partner-form-btns">
                       <button className="btn-submit-partner" type="submit">
-                        <span>⚡</span> Gửi đề xuất qua Zalo OA đối tác →
+                        <span>⚡</span> Đăng Ký Hợp Tác Ngay Qua Zalo →
                       </button>
                       <a className="btn-call-partner" href={`tel:${HOTLINE_PHONE}`}>
                         <span>📞</span> Hoặc gọi trực tiếp Hotline {HOTLINE_DISPLAY}
