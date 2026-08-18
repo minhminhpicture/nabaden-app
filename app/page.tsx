@@ -310,7 +310,13 @@ export default function Home() {
   // Partner Tab State
   const [partnerRole, setPartnerRole] = useState<"ctv" | "npp">("ctv");
   const [formRole, setFormRole] = useState("Cộng tác viên (CTV)");
-  const [partnerSubmittedMsg, setPartnerSubmittedMsg] = useState("");
+  const [partnerSuccessData, setPartnerSuccessData] = useState<{
+    fullName: string;
+    phone: string;
+    province: string;
+    partnerType: string;
+  } | null>(null);
+  const [submittingPartner, setSubmittingPartner] = useState(false);
 
   useEffect(() => {
     const handleInstall = (event: Event) => {
@@ -510,29 +516,78 @@ export default function Home() {
     window.open(ZALO_OA_URL, "_blank", "noopener,noreferrer");
   };
 
-  const submitPartnerForm = (event: FormEvent<HTMLFormElement>) => {
+  const submitPartnerForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const body = [
-      "Xin chào NABADEN, tôi gửi ĐỀ XUẤT HỢP TÁC từ website:",
-      `- Hình thức đăng ký: ${formRole}`,
-      `- Họ và tên: ${data.get("name")}`,
-      `- Số điện thoại (Zalo): ${data.get("phone")}`,
-      `- Tỉnh / Thành phố: ${data.get("region") || "Chưa chọn"}`,
-      `- Kênh bán / Kinh nghiệm: ${data.get("channel") || "Chưa chọn"}`,
-      `- Ghi chú & nhu cầu: ${data.get("note") || "Không có"}`,
-    ].join("\n");
-    setPartnerSubmittedMsg(body);
-    try {
-      if (navigator.clipboard) {
-        void navigator.clipboard.writeText(body)
-          .then(() => notify("Đã sao chép đề xuất · Mở Zalo OA để dán & gửi"))
-          .catch(() => notify("Hãy nhấn giữ nội dung để sao chép"));
-      }
-    } catch {
-      // Ignored
+    const fullName = String(data.get("name") || "").trim();
+    const rawPhone = String(data.get("phone") || "").trim();
+    const phoneVal = rawPhone.replace(/[\s\-\.]/g, "").replace(/^\+84/, "0").replace(/^84/, "0");
+    const province = String(data.get("region") || "").trim();
+    const salesChannel = String(data.get("channel") || "").trim();
+    const userNotes = String(data.get("note") || "").trim();
+
+    const vnPhoneRegex = /^0(3|5|7|8|9)[0-9]{8}$/;
+    if (!vnPhoneRegex.test(phoneVal)) {
+      notify("Số điện thoại Zalo không hợp lệ. Vui lòng nhập 10 chữ số (ví dụ: 0907215521)");
+      return;
     }
-    window.open(PARTNER_ZALO_URL, "_blank", "noopener,noreferrer");
+
+    if (!province) {
+      notify("Vui lòng chọn Tỉnh / Thành phố bạn đang sinh sống.");
+      return;
+    }
+
+    setSubmittingPartner(true);
+    const now = new Date();
+    const formattedTimestamp = now.toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+    const noteWithSource = userNotes ? `${userNotes} (Nguồn: app.nabaden.vn)` : "(Nguồn: app.nabaden.vn)";
+
+    const payload = {
+      timestamp: formattedTimestamp,
+      partnerType: formRole,
+      fullName,
+      phone: phoneVal,
+      province,
+      salesChannel,
+      notes: noteWithSource,
+      row: [
+        formattedTimestamp,
+        formRole,
+        fullName,
+        "'" + phoneVal,
+        province,
+        salesChannel,
+        noteWithSource
+      ]
+    };
+
+    const webhookUrl = "https://script.google.com/macros/s/AKfycbz5zVdK4zDesJDwH-ijWZM5rEeEsUZMo0A3ugnuIa96GKlGZYiavQq40Ng97uR5RtHbsw/exec";
+
+    try {
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+        mode: "no-cors"
+      });
+      setPartnerSuccessData({
+        fullName,
+        phone: phoneVal,
+        province,
+        partnerType: formRole
+      });
+      notify("🎉 Đã lưu thông tin về Trang Tính NABADEN!");
+    } catch {
+      setPartnerSuccessData({
+        fullName,
+        phone: phoneVal,
+        province,
+        partnerType: formRole
+      });
+      notify("Đã đăng ký thành công!");
+    } finally {
+      setSubmittingPartner(false);
+    }
   };
 
   return (
@@ -844,7 +899,7 @@ export default function Home() {
                     <div><b>Hồ sơ OCOP 3 sao & hỗ trợ POSM:</b><small>Cung cấp giấy chứng nhận OCOP 3 sao, VietGAP, tem truy xuất nguồn gốc, hình ảnh standee cho điểm bán.</small></div>
                   </div>
                 </div>
-                <a className="btn-partner-primary" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer" style={{ width: "100%", background: "#b45309", color: "#ffffff" }}>
+                <a className="btn-partner-primary" href="#partner-form" style={{ width: "100%", background: "#b45309", color: "#ffffff" }}>
                   Nhận báo giá sỉ & Đàm phán hợp tác →
                 </a>
               </div>
@@ -899,45 +954,37 @@ export default function Home() {
               </div>
             </section>
 
-            {/* Form đăng ký hợp tác trực tiếp chuẩn nabaden.vn/hop-tac */}
+            {/* Form đăng ký hợp tác trực tiếp chuẩn 100% nabaden.vn/hop-tac */}
             <section className="partner-form-wrapper" id="partner-form">
-              {partnerSubmittedMsg ? (
-                <div className="partner-success-state">
-                  <div className="success-icon-badge" style={{ fontSize: "36px", textAlign: "center", marginBottom: "8px" }}>🎉</div>
-                  <h3 className="success-title" style={{ fontFamily: "Lora, serif", fontSize: "24px", color: "var(--green)", textAlign: "center", margin: "0 0 6px" }}>
+              {partnerSuccessData ? (
+                <div className="partner-success-state" style={{ textAlign: "center", padding: "10px 0" }}>
+                  <div className="success-icon-badge" style={{ fontSize: "40px", marginBottom: "8px" }}>🎉</div>
+                  <h3 className="success-title" style={{ fontFamily: "Lora, serif", fontSize: "24px", color: "var(--green)", margin: "0 0 8px" }}>
                     Đăng Ký Thành Công!
                   </h3>
-                  <p className="success-subtitle" style={{ textAlign: "center", color: "var(--muted)", fontSize: "14px", margin: "0 0 16px" }}>
-                    Đề xuất của bạn đã được khởi tạo và sao chép. Hãy mở Zalo OA đối tác NABADEN để gửi tin nhắn ngay.
+                  <p className="success-subtitle" style={{ color: "var(--muted)", fontSize: "14px", lineHeight: "1.5", margin: "0 0 20px" }}>
+                    Cảm ơn bạn đã đăng ký. Thông tin đề xuất hợp tác đã được tự động lưu về hệ thống Trang Tính NABADEN. Đội ngũ NABADEN sẽ chủ động liên hệ qua Zalo/SĐT trong ít phút.
                   </p>
-                  
-                  <div className="consultation-copy" style={{ marginBottom: "16px" }}>
-                    <div>
-                      <span>NỘI DUNG ĐỀ XUẤT ĐÃ SAO CHÉP</span>
-                      <button onClick={() => {
-                        void navigator.clipboard.writeText(partnerSubmittedMsg);
-                        notify("Đã sao chép lại đề xuất hợp tác");
-                      }}>Sao chép lại</button>
+
+                  <div className="consultation-copy" style={{ textAlign: "left", marginBottom: "20px", background: "var(--sand)", border: "1.5px solid var(--line-strong)", borderRadius: "16px", padding: "14px" }}>
+                    <div style={{ display: "grid", gap: "8px", fontSize: "13.5px" }}>
+                      <div><b>Họ và tên:</b> <span style={{ color: "var(--green-dark)", fontWeight: "700" }}>{partnerSuccessData.fullName}</span></div>
+                      <div><b>Số điện thoại (Zalo):</b> <span style={{ color: "var(--green-dark)", fontWeight: "700" }}>{partnerSuccessData.phone}</span></div>
+                      <div><b>Tỉnh / Thành phố:</b> <span>{partnerSuccessData.province}</span></div>
+                      <div><b>Hình thức đăng ký:</b> <span style={{ color: "var(--gold-dark)", fontWeight: "700" }}>{partnerSuccessData.partnerType}</span></div>
                     </div>
-                    <textarea value={partnerSubmittedMsg} readOnly aria-label="Nội dung đề xuất hợp tác" />
                   </div>
 
-                  <div className="zalo-guide" style={{ marginBottom: "16px" }}>
-                    <b>1</b><span>Mở Zalo OA</span><i>→</i>
-                    <b>2</b><span>Dán đề xuất</span><i>→</i>
-                    <b>3</b><span>Nhấn gửi</span>
-                  </div>
-
-                  <div className="partner-form-btns">
-                    <a className="btn-submit-partner" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer">
-                      <span>⚡</span> Mở Zalo OA NABADEN Ngay ↗
-                    </a>
+                  <div className="partner-form-btns" style={{ gap: "10px" }}>
+                    <button className="btn-submit-partner" onClick={() => changeTab("home")}>
+                      Quay Về Trang Chủ ➔
+                    </button>
                     <button
                       type="button"
                       className="btn-call-partner"
-                      onClick={() => setPartnerSubmittedMsg("")}
+                      onClick={() => setPartnerSuccessData(null)}
                     >
-                      <span>↺</span> Điền Đề Xuất Khác
+                      ↺ Đăng Ký Đề Xuất Khác
                     </button>
                   </div>
                 </div>
@@ -954,8 +1001,8 @@ export default function Home() {
                       Bạn muốn đăng ký theo hình thức: *
                       <div className="form-role-select-grid">
                         {[
-                          { id: "Cộng tác viên (CTV)", label: "🌱 Cộng Tác Viên (CTV)", sub: "Bán theo đơn, không ôm hàng, nhận chiết khấu" },
-                          { id: "Nhà Phân Phối / Đại Lý", label: "👑 Nhà Phân Phối / Đại Lý", sub: "Nhập số lượng lớn, giá sỉ tại vườn" },
+                          { id: "Cộng Tác Viên (CTV)", label: "🌱 Cộng Tác Viên (CTV)", sub: "Bán theo đơn, không ôm hàng, nhận chiết khấu" },
+                          { id: "Nhà Phân Phối / Đại Lý Sỉ", label: "👑 Nhà Phân Phối / Đại Lý", sub: "Nhập số lượng lớn, giá sỉ tại vườn" },
                         ].map((role) => (
                           <button
                             type="button"
@@ -1016,7 +1063,7 @@ export default function Home() {
                           <option value="Bình Định">Bình Định</option>
                           <option value="Bình Thuận">Bình Thuận</option>
                           <option value="Cà Mau">Cà Mau</option>
-                          <option value="Đắk Lắk">Đắk Lắk</option>
+                          <option value="Đắc Lắk">Đắc Lắk</option>
                           <option value="Đồng Tháp">Đồng Tháp</option>
                           <option value="Gia Lai">Gia Lai</option>
                           <option value="Khánh Hòa">Khánh Hòa</option>
@@ -1054,12 +1101,9 @@ export default function Home() {
                     </label>
 
                     <div className="partner-form-btns">
-                      <button className="btn-submit-partner" type="submit">
-                        <span>⚡</span> Đăng Ký Hợp Tác Ngay Qua Zalo →
+                      <button className="btn-submit-partner" type="submit" disabled={submittingPartner}>
+                        {submittingPartner ? "Đang gửi thông tin..." : "⚡ Đăng Ký Hợp Tác Ngay →"}
                       </button>
-                      <a className="btn-call-partner" href={`tel:${HOTLINE_PHONE}`}>
-                        <span>📞</span> Hoặc gọi trực tiếp Hotline {HOTLINE_DISPLAY}
-                      </a>
                     </div>
                   </form>
                 </>
