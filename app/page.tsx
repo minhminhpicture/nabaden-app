@@ -311,7 +311,6 @@ export default function Home() {
   const [partnerRole, setPartnerRole] = useState<"ctv" | "npp">("ctv");
   const [formRole, setFormRole] = useState("Cộng tác viên (CTV)");
   const [partnerSubmittedMsg, setPartnerSubmittedMsg] = useState("");
-  const [seniorMode, setSeniorMode] = useState(false);
 
   useEffect(() => {
     const handleInstall = (event: Event) => {
@@ -537,26 +536,12 @@ export default function Home() {
   };
 
   return (
-    <main className={`app-shell ${seniorMode ? "senior-mode" : ""}`}>
+    <main className="app-shell">
       <header className="topbar">
         <button className="brand" onClick={() => changeTab("home")} aria-label="Về trang chủ">
           <img src="/assets/nabaden-logo.webp" alt="NABADEN" />
-          <span>OCOP 3★</span>
         </button>
         <div className="top-actions">
-          <button
-            className={`top-senior-btn ${seniorMode ? "active" : ""}`}
-            onClick={() => {
-              setSeniorMode(!seniorMode);
-              notify(seniorMode ? "Đã về cỡ chữ chuẩn" : "Đã bật Chữ Lớn cho người lớn tuổi 👁️");
-            }}
-            aria-label="Chế độ chữ lớn"
-          >
-            {seniorMode ? "👁️ Chữ To" : "👁️ Chữ Lớn"}
-          </button>
-          <button className="top-partner-btn" onClick={() => changeTab("partner")} aria-label="Mở trang hợp tác">
-            <span>🤝</span> Hợp tác
-          </button>
           <button className="icon-button" onClick={shareApp} aria-label="Chia sẻ ứng dụng">↗</button>
         </div>
       </header>
@@ -982,6 +967,18 @@ export default function Home() {
                         ))}
                       </div>
                     </label>
+
+                    {formRole.includes("CTV") || formRole.includes("Cộng tác viên") ? (
+                      <div className="benefit-callout ctv" style={{ margin: "6px 0 10px" }}>
+                        <span style={{ fontSize: "20px" }}>💡</span>
+                        <span><b>Quyền lợi CTV:</b> Vốn 0đ, không ôm hàng. NABADEN hỗ trợ hái tại vườn, bọc xốp, đóng thùng, ship COD và chiết khấu hấp dẫn từng đơn.</span>
+                      </div>
+                    ) : (
+                      <div className="benefit-callout npp" style={{ margin: "6px 0 10px" }}>
+                        <span style={{ fontSize: "20px" }}>⭐</span>
+                        <span><b>Quyền lợi NPP / Đại lý:</b> Báo giá sỉ trực tiếp từ HTX Thạnh Tân, ưu tiên nguồn hàng vụ nghịch, hỗ trợ tem OCOP 3★ & VietGAP.</span>
+                      </div>
+                    )}
 
                     <label>
                       Họ và tên của bạn *
