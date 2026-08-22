@@ -315,16 +315,6 @@ export default function Home() {
   });
   const [filter, setFilter] = useState("Tất cả");
   const [query, setQuery] = useState("");
-  const [favorites, setFavorites] = useState<string[]>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        return JSON.parse(localStorage.getItem("nabaden-favorites") || "[]");
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  });
   const [basket, setBasket] = useState<string[]>(() => {
     if (typeof window !== "undefined") {
       try {
@@ -394,10 +384,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("nabaden-favorites", JSON.stringify(favorites));
-  }, [favorites]);
-
-  useEffect(() => {
     localStorage.setItem("nabaden-basket", JSON.stringify(basket));
   }, [basket]);
 
@@ -436,12 +422,6 @@ export default function Home() {
   const changeTab = (next: TabId) => {
     setTab(next);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const toggleFavorite = (id: string) => {
-    setFavorites((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
-    );
   };
 
   const toggleBasket = (id: string) => {
@@ -736,7 +716,7 @@ export default function Home() {
             <SectionHead eyebrow="Quy cách đóng gói" title="Dòng sản phẩm chính gốc" action="Xem tất cả" onAction={() => changeTab("products")} />
             <div className="product-grid home-product-grid">
               {products.slice(0, 4).map((product) => (
-                <ProductCard key={product.id} product={product} favorite={favorites.includes(product.id)} inBasket={basket.includes(product.id)} onFavorite={toggleFavorite} onBasket={toggleBasket} />
+                <ProductCard key={product.id} product={product} inBasket={basket.includes(product.id)} onBasket={toggleBasket} />
               ))}
             </div>
 
@@ -781,7 +761,7 @@ export default function Home() {
 
             <div className="product-grid">
               {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} favorite={favorites.includes(product.id)} inBasket={basket.includes(product.id)} onFavorite={toggleFavorite} onBasket={toggleBasket} />
+                <ProductCard key={product.id} product={product} inBasket={basket.includes(product.id)} onBasket={toggleBasket} />
               ))}
             </div>
 
@@ -1281,8 +1261,7 @@ export default function Home() {
               </div>
             </a>
             <div className="saved-card">
-              <span>{favorites.length} sản phẩm yêu thích</span>
-              <span>{basket.length} yêu cầu đang lưu</span>
+              <span>{basket.length} sản phẩm trong giỏ quan tâm</span>
             </div>
           </>
         )}
@@ -1492,16 +1471,12 @@ function PageIntro({ eyebrow, title, text }: { eyebrow: string; title: string; t
 
 function ProductCard({
   product,
-  favorite,
   inBasket,
-  onFavorite,
   onBasket,
   compact = false,
 }: {
   product: typeof products[number];
-  favorite: boolean;
   inBasket: boolean;
-  onFavorite: (id: string) => void;
   onBasket: (id: string) => void;
   compact?: boolean;
 }) {
@@ -1510,9 +1485,6 @@ function ProductCard({
       <div className="product-image">
         <img src={product.image} alt={product.name} />
         {product.ocop && <span className="product-badge-ocop">OCOP 3 SAO</span>}
-        <button onClick={() => onFavorite(product.id)} aria-label={favorite ? "Bỏ yêu thích" : "Thêm yêu thích"}>
-          {favorite ? "Đã lưu" : "Lưu"}
-        </button>
       </div>
       <div className="product-info">
         <span className="product-tag">{product.tag || product.category}</span>
