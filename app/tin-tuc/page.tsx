@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Footer from "../../components/Footer";
+
+function Footer({ backLink }: { backLink: { href: string; label: string } }) {
+  return (
+    <footer style={{ marginTop: "40px", paddingTop: "20px", borderTop: "1px solid #e3dcd0", textAlign: "center" }}>
+      <Link href={backLink.href} style={{ color: "#075f39", fontWeight: 700, fontSize: "14px" }}>
+        ← {backLink.label}
+      </Link>
+    </footer>
+  );
+}
 
 export const metadata: Metadata = {
   title:
