@@ -26,7 +26,7 @@ const products = [
   {
     id: "hop-3-trai",
     name: "Hộp Đặc Biệt (3 Quả)",
-    tag: "OCOP 3★ · Quà Biếu VIP",
+    tag: "OCOP 3 SAO · QUÀ BIẾU VIP",
     category: "Tươi",
     image: "/assets/hop-qua-3-trai-vip-nabaden.jpg",
     note: "Tuyển chọn thượng hạng",
@@ -41,7 +41,7 @@ const products = [
   {
     id: "thung-5kg",
     name: "Thùng 5KG Tuyển Chọn",
-    tag: "OCOP 3★ · Biếu Tặng Gia Đình",
+    tag: "OCOP 3 SAO · BIẾU TẶNG GIA ĐÌNH",
     category: "Tươi",
     image: "/assets/thung-5kg-nabaden.jpg",
     note: "Trái già loại 1 · Bọc lưới",
@@ -56,7 +56,7 @@ const products = [
   {
     id: "thung-15kg",
     name: "Thùng 15KG Tuyển Chọn",
-    tag: "OCOP 3★ · Đơn Sỉ Toàn Quốc",
+    tag: "OCOP 3 SAO · ĐƠN SỈ TOÀN QUỐC",
     category: "Tươi",
     image: "/assets/thung-15kg-nabaden.jpg",
     note: "Giá sỉ tận vườn · Thùng 3-5 lớp",
@@ -241,18 +241,69 @@ const productFaqs = [
   },
   {
     q: "Làm sao để nhận báo giá sỉ hoặc đăng ký làm CTV / Đại lý?",
-    a: "Quý khách vui lòng bấm sang tab '🤝 Hợp tác' trên ứng dụng để gửi thông tin đăng ký, hoặc gọi trực tiếp Hotline 0907 215 521 / nhắn tin Zalo OA để nhận bảng giá sỉ & ưu đãi chiết khấu mới nhất hôm nay.",
+    a: "Quý khách vui lòng bấm sang tab 'Hợp tác' trên ứng dụng để gửi thông tin đăng ký, hoặc gọi trực tiếp Hotline 0907 215 521 / nhắn tin Zalo OA để nhận bảng giá sỉ & ưu đãi chiết khấu mới nhất hôm nay.",
   },
 ];
 
-const navItems: Array<{ id: TabId; label: string; icon: string; highlight?: boolean }> = [
-  { id: "home", label: "Trang chủ", icon: "⌂" },
-  { id: "products", label: "Sản phẩm", icon: "◫" },
-  { id: "partner", label: "Hợp tác", icon: "🤝", highlight: true },
-  { id: "experience", label: "Trải nghiệm", icon: "♧" },
-  { id: "news", label: "Tin tức", icon: "▤" },
-  { id: "contact", label: "Kết nối", icon: "◎" },
+const navItems: Array<{ id: TabId; label: string; highlight?: boolean }> = [
+  { id: "home", label: "Trang chủ" },
+  { id: "products", label: "Sản phẩm" },
+  { id: "partner", label: "Hợp tác", highlight: true },
+  { id: "experience", label: "Trải nghiệm" },
+  { id: "news", label: "Tin tức" },
+  { id: "contact", label: "Kết nối" },
 ];
+
+const renderNavIcon = (id: TabId) => {
+  switch (id) {
+    case "home":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+      );
+    case "products":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="3" width="7" height="7" rx="1.5" />
+          <rect x="14" y="14" width="7" height="7" rx="1.5" />
+          <rect x="3" y="14" width="7" height="7" rx="1.5" />
+        </svg>
+      );
+    case "partner":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    case "experience":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="12 8 8 16 16 16 12 8" />
+        </svg>
+      );
+    case "news":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" />
+          <line x1="18" y1="8" x2="10" y2="8" />
+          <line x1="18" y1="12" x2="10" y2="12" />
+        </svg>
+      );
+    case "contact":
+      return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+      );
+  }
+};
 
 export default function Home() {
   const [tab, setTab] = useState<TabId>(() => {
@@ -576,7 +627,7 @@ export default function Home() {
         province,
         partnerType: formRole
       });
-      notify("🎉 Đã lưu thông tin về Trang Tính NABADEN!");
+      notify("Đã lưu thông tin về Trang Tính NABADEN!");
     } catch {
       setPartnerSuccessData({
         fullName,
@@ -597,7 +648,13 @@ export default function Home() {
           <img src="/assets/nabaden-logo.webp" alt="NABADEN" />
         </button>
         <div className="top-actions">
-          <button className="icon-button" onClick={shareApp} aria-label="Chia sẻ ứng dụng">↗</button>
+          <button className="icon-button" onClick={shareApp} aria-label="Chia sẻ ứng dụng">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+              <polyline points="16 6 12 2 8 6" />
+              <line x1="12" y1="2" x2="12" y2="15" />
+            </svg>
+          </button>
         </div>
       </header>
 
@@ -618,29 +675,29 @@ export default function Home() {
                 <p>Quả tươi OCOP 3 sao · Đóng thùng bọc xốp · Tuyển NPP & CTV toàn quốc</p>
                 <div className="hero-btn-row">
                   <button className="hero-btn-primary" onClick={() => changeTab("products")}>Xem sản phẩm <b>→</b></button>
-                  <button className="hero-btn-secondary" onClick={() => changeTab("partner")}>🤝 Hợp tác phân phối</button>
+                  <button className="hero-btn-secondary" onClick={() => changeTab("partner")}>Hợp tác phân phối</button>
                 </div>
               </div>
-              <div className="hero-badge"><strong>3★</strong><span>OCOP<br />chính thức</span></div>
+              <div className="hero-badge"><strong>OCOP</strong><span>3 SAO<br />chính thức</span></div>
             </section>
 
             <section className="quick-grid" aria-label="Tác vụ nhanh">
-              <button onClick={() => changeTab("products")}><span>🍈</span><b>Sản phẩm</b><small>3 quy cách</small></button>
-              <button className="highlight-quick" onClick={() => changeTab("partner")}><span>🤝</span><b>Hợp tác</b><small>CTV / NPP</small></button>
-              <button onClick={openBooking}><span>🌿</span><b>Đặt lịch vườn</b><small>Hái quả</small></button>
-              <a href={ZALO_OA_URL} target="_blank" rel="noreferrer"><span>💬</span><b>Nhắn Zalo</b><small>Tư vấn nhanh</small></a>
+              <button onClick={() => changeTab("products")}><b>Sản phẩm</b><small>3 quy cách</small></button>
+              <button className="highlight-quick" onClick={() => changeTab("partner")}><b>Hợp tác</b><small>CTV / NPP</small></button>
+              <button onClick={openBooking}><b>Đặt lịch vườn</b><small>Hái quả</small></button>
+              <a href={ZALO_OA_URL} target="_blank" rel="noreferrer"><b>Nhắn Zalo</b><small>Tư vấn nhanh</small></a>
             </section>
 
             {/* Banner nổi bật Hợp Tác */}
             <section className="home-partner-card">
-              <span className="home-partner-badge">🤝 Cơ hội hợp tác kinh doanh</span>
+              <span className="home-partner-badge">CƠ HỘI HỢP TÁC KINH DOANH</span>
               <h2>Cùng NABADEN phân phối Mãng Cầu Bà Đen</h2>
               <p>Mô hình linh hoạt, không áp lực ôm hàng, NABADEN hỗ trợ cắt hái tại vườn, đóng thùng bọc xốp, ship COD toàn quốc và đối soát minh bạch.</p>
               <div className="home-partner-perks">
-                <div><span>✓</span> Vốn 0đ cho CTV</div>
-                <div><span>✓</span> Giá sỉ tận vườn cho NPP</div>
-                <div><span>✓</span> Nguồn hàng ổn định</div>
-                <div><span>✓</span> Bao dập vỡ vận chuyển</div>
+                <div><span>•</span> Vốn 0đ cho CTV</div>
+                <div><span>•</span> Giá sỉ tận vườn cho NPP</div>
+                <div><span>•</span> Nguồn hàng ổn định</div>
+                <div><span>•</span> Bao dập vỡ vận chuyển</div>
               </div>
               <button className="home-partner-btn" onClick={() => changeTab("partner")}>
                 Khám phá chính sách hợp tác chi tiết →
@@ -660,7 +717,7 @@ export default function Home() {
                   <span>{trustSlides[trustSlide].eyebrow}</span>
                   <h3>{trustSlides[trustSlide].title}</h3>
                   <p>{trustSlides[trustSlide].text}</p>
-                  {trustSlides[trustSlide].certificate && <a href="/assets/chung-nhan-ocop-3-sao.jpg" target="_blank" rel="noreferrer">Xem chứng nhận đầy đủ ↗</a>}
+                  {trustSlides[trustSlide].certificate && <a href="/assets/chung-nhan-ocop-3-sao.jpg" target="_blank" rel="noreferrer">Xem chứng nhận đầy đủ →</a>}
                 </div>
                 <button className="trust-prev" onClick={() => setTrustSlide((trustSlide - 1 + trustSlides.length) % trustSlides.length)} aria-label="Ảnh trước">‹</button>
                 <button className="trust-next" onClick={() => setTrustSlide((trustSlide + 1) % trustSlides.length)} aria-label="Ảnh tiếp theo">›</button>
@@ -669,9 +726,9 @@ export default function Home() {
                 {trustSlides.map((slide, index) => <button key={slide.id} className={trustSlide === index ? "active" : ""} onClick={() => setTrustSlide(index)} aria-label={`Xem slide ${index + 1}`} />)}
               </div>
               <div className="trust-proof">
-                <span><b>3★</b> OCOP chính thức</span>
-                <span><b>✓</b> Thùng xốp chuyên dụng</span>
-                <span><b>🤝</b> Tiếp nhận CTV/NPP</span>
+                <span><b>OCOP</b> 3 Sao chính thức</span>
+                <span>Thùng xốp chuyên dụng</span>
+                <span>Tuyển CTV & NPP</span>
               </div>
             </section>
 
@@ -696,7 +753,7 @@ export default function Home() {
             <SectionHead eyebrow="Cẩm nang & tin tức" title="Kiến thức từ vùng trồng" action="Xem thêm" onAction={() => changeTab("news")} />
             <a className="featured-news" href={stories[0].href} target="_blank" rel="noreferrer">
               <img src={stories[0].image} alt="" />
-              <div><small>{newsTag(stories[0])}</small><h3>{stories[0].title}</h3><span>Đọc bài trên nabaden.vn ↗</span></div>
+              <div><small>{newsTag(stories[0])}</small><h3>{stories[0].title}</h3><span>Đọc bài trên nabaden.vn →</span></div>
             </a>
           </>
         )}
@@ -709,7 +766,10 @@ export default function Home() {
             <PageIntro eyebrow="Chuẩn VietGAP & OCOP 3 Sao" title="Danh mục Sản Phẩm NABADEN" text="Tuyển chọn trái già loại 1 dưới chân Núi Bà Đen Tây Ninh với 3 quy cách đóng gói chuyên dụng và các dòng chế biến cao cấp." />
             
             <label className="search-box">
-              <span>⌕</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
               <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Tìm hộp VIP, thùng 5kg, thùng 15kg..." />
             </label>
             
@@ -727,7 +787,6 @@ export default function Home() {
 
             {!filteredProducts.length && (
               <div className="empty-state">
-                <span>🍃</span>
                 <h3>Chưa tìm thấy sản phẩm</h3>
                 <p>Thử một từ khóa hoặc chuyển nhóm sản phẩm khác.</p>
               </div>
@@ -747,19 +806,19 @@ export default function Home() {
                     </div>
                     <div className="spec-card-rows">
                       <div className="spec-card-row">
-                        <span className="spec-card-label">🎯 Mục đích sử dụng:</span>
+                        <span className="spec-card-label">Mục đích sử dụng:</span>
                         <span className="spec-card-value">{item.target}</span>
                       </div>
                       <div className="spec-card-row">
-                        <span className="spec-card-label">📦 Quy cách đóng gói:</span>
+                        <span className="spec-card-label">Quy cách đóng gói:</span>
                         <span className="spec-card-value">{item.pack}</span>
                       </div>
                       <div className="spec-card-row">
-                        <span className="spec-card-label">🍈 Đặc điểm trái:</span>
+                        <span className="spec-card-label">Đặc điểm trái:</span>
                         <span className="spec-card-value">{item.fruitSpec}</span>
                       </div>
                       <div className="spec-card-row">
-                        <span className="spec-card-label">🚚 Chính sách giao hàng:</span>
+                        <span className="spec-card-label">Chính sách giao hàng:</span>
                         <span className="spec-card-value">{item.shipPolicy}</span>
                       </div>
                     </div>
@@ -784,7 +843,6 @@ export default function Home() {
             </section>
 
             <div className="notice-card">
-              <span>✓</span>
               <div>
                 <b>Thông tin minh bạch</b>
                 <p>Huy hiệu OCOP 3 sao áp dụng cho “Quả Mãng cầu (Na) ta” theo Quyết định của UBND TP. Tây Ninh (Mã số: 72-703-01-2023).</p>
@@ -799,23 +857,23 @@ export default function Home() {
         {tab === "partner" && (
           <>
             <section className="partner-hero-box">
-              <span className="partner-hero-kicker">🤝 Tuyển Đối Tác Phân Phối & CTV</span>
+              <span className="partner-hero-kicker">TUYỂN ĐỐI TÁC PHÂN PHỐI & CTV</span>
               <h1 className="partner-hero-title">Đồng hành phân phối <em>Mãng Cầu Bà Đen</em></h1>
               <p className="partner-hero-desc">Không áp lực ôm hàng, NABADEN hỗ trợ toàn bộ các khâu từ cắt hái tại vườn, bọc lưới xốp đóng thùng, giao hàng thu COD và đối soát chiết khấu minh bạch.</p>
               
               <div className="partner-hero-pills">
-                <span className="partner-pill"><b>✓</b> Vốn 0đ cho CTV</span>
-                <span className="partner-pill"><b>✓</b> Giá sỉ tận vườn cho NPP</span>
-                <span className="partner-pill"><b>✓</b> Bao dập vỡ khi ship</span>
-                <span className="partner-pill"><b>✓</b> OCOP 3★ & VietGAP</span>
+                <span className="partner-pill">Vốn 0đ cho CTV</span>
+                <span className="partner-pill">Giá sỉ tận vườn cho NPP</span>
+                <span className="partner-pill">Bao dập vỡ khi ship</span>
+                <span className="partner-pill">OCOP 3 Sao & VietGAP</span>
               </div>
 
               <div className="partner-hero-actions">
                 <a className="btn-partner-primary" href={PARTNER_ZALO_URL} target="_blank" rel="noreferrer">
-                  Nhắn Zalo Đối Tác ↗
+                  Nhắn Zalo Đối Tác →
                 </a>
                 <a className="btn-partner-secondary" href={`tel:${HOTLINE_PHONE}`}>
-                  📞 Gọi {HOTLINE_DISPLAY}
+                  Gọi Hotline {HOTLINE_DISPLAY}
                 </a>
               </div>
             </section>
@@ -826,7 +884,6 @@ export default function Home() {
                 className={`partner-role-tab ${partnerRole === "ctv" ? "active" : ""}`}
                 onClick={() => { setPartnerRole("ctv"); setFormRole("Cộng tác viên (CTV)"); }}
               >
-                <span>🌸</span>
                 <b>Cộng Tác Viên (CTV)</b>
                 <small>Bán online · Vốn 0đ</small>
               </button>
@@ -834,7 +891,6 @@ export default function Home() {
                 className={`partner-role-tab ${partnerRole === "npp" ? "active" : ""}`}
                 onClick={() => { setPartnerRole("npp"); setFormRole("Nhà Phân Phối / Đại Lý"); }}
               >
-                <span>🏢</span>
                 <b>Nhà Phân Phối / Đại Lý</b>
                 <small>Bán sỉ · Cửa hàng sạch</small>
               </button>
@@ -958,7 +1014,6 @@ export default function Home() {
             <section className="partner-form-wrapper" id="partner-form">
               {partnerSuccessData ? (
                 <div className="partner-success-state" style={{ textAlign: "center", padding: "10px 0" }}>
-                  <div className="success-icon-badge" style={{ fontSize: "40px", marginBottom: "8px" }}>🎉</div>
                   <h3 className="success-title" style={{ fontFamily: "Lora, serif", fontSize: "24px", color: "var(--green)", margin: "0 0 8px" }}>
                     Đăng Ký Thành Công!
                   </h3>
@@ -977,14 +1032,14 @@ export default function Home() {
 
                   <div className="partner-form-btns" style={{ gap: "10px" }}>
                     <button className="btn-submit-partner" onClick={() => changeTab("home")}>
-                      Quay Về Trang Chủ ➔
+                      Quay Về Trang Chủ →
                     </button>
                     <button
                       type="button"
                       className="btn-call-partner"
                       onClick={() => setPartnerSuccessData(null)}
                     >
-                      ↺ Đăng Ký Đề Xuất Khác
+                      Đăng Ký Đề Xuất Khác
                     </button>
                   </div>
                 </div>
@@ -1001,8 +1056,8 @@ export default function Home() {
                       Bạn muốn đăng ký theo hình thức: *
                       <div className="form-role-select-grid">
                         {[
-                          { id: "Cộng Tác Viên (CTV)", label: "🌱 Cộng Tác Viên (CTV)", sub: "Bán theo đơn, không ôm hàng, nhận chiết khấu" },
-                          { id: "Nhà Phân Phối / Đại Lý Sỉ", label: "👑 Nhà Phân Phối / Đại Lý", sub: "Nhập số lượng lớn, giá sỉ tại vườn" },
+                          { id: "Cộng Tác Viên (CTV)", label: "Cộng Tác Viên (CTV)", sub: "Bán theo đơn, không ôm hàng, nhận chiết khấu" },
+                          { id: "Nhà Phân Phối / Đại Lý Sỉ", label: "Nhà Phân Phối / Đại Lý", sub: "Nhập số lượng lớn, giá sỉ tại vườn" },
                         ].map((role) => (
                           <button
                             type="button"
@@ -1012,9 +1067,9 @@ export default function Home() {
                             style={{ flexDirection: "column", alignItems: "flex-start", gap: "2px", padding: "12px 10px" }}
                           >
                             <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13.5px", fontWeight: "800" }}>
-                              <span>{formRole === role.id ? "●" : "○"}</span> {role.label}
+                              {role.label}
                             </div>
-                            <small style={{ color: "var(--muted)", fontSize: "11px", marginLeft: "18px", lineHeight: "1.3" }}>{role.sub}</small>
+                            <small style={{ color: "var(--muted)", fontSize: "11px", lineHeight: "1.3" }}>{role.sub}</small>
                           </button>
                         ))}
                       </div>
@@ -1022,13 +1077,11 @@ export default function Home() {
 
                     {formRole.includes("CTV") || formRole.includes("Cộng Tác Viên") ? (
                       <div className="benefit-callout ctv" style={{ margin: "4px 0 10px" }}>
-                        <span style={{ fontSize: "20px" }}>💡</span>
                         <span><b>Chính sách CTV:</b> Không bắt buộc ôm hàng. NABADEN hỗ trợ các khâu hái trái tại vườn, bọc xốp, đóng thùng, gửi hàng và thu hộ COD, đối soát chiết khấu định kỳ cùng bạn.</span>
                       </div>
                     ) : (
                       <div className="benefit-callout npp" style={{ margin: "4px 0 10px" }}>
-                        <span style={{ fontSize: "20px" }}>⭐</span>
-                        <span><b>Chính sách NPP / Đại Lý:</b> Báo giá sỉ ưu đãi nhất tận vườn từ HTX Thạnh Tân, ưu tiên nguồn hàng vụ nghịch, hỗ trợ tem OCOP 3★, VietGAP & hình ảnh truyền thông.</span>
+                        <span><b>Chính sách NPP / Đại Lý:</b> Báo giá sỉ ưu đãi nhất tận vườn từ HTX Thạnh Tân, ưu tiên nguồn hàng vụ nghịch, hỗ trợ tem OCOP 3 sao, VietGAP & hình ảnh truyền thông.</span>
                       </div>
                     )}
 
@@ -1046,7 +1099,7 @@ export default function Home() {
                       Tỉnh / Thành phố sinh sống *
                       <select name="region" required className="form-select">
                         <option value="">-- Chọn Tỉnh / Thành phố --</option>
-                        <optgroup label="⭐ Tỉnh / Thành phố trọng điểm">
+                        <optgroup label="Tỉnh / Thành phố trọng điểm">
                           <option value="TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
                           <option value="Hà Nội">Hà Nội</option>
                           <option value="Tây Ninh">Tây Ninh</option>
@@ -1057,7 +1110,7 @@ export default function Home() {
                           <option value="Cần Thơ">Cần Thơ</option>
                           <option value="Hải Phòng">Hải Phòng</option>
                         </optgroup>
-                        <optgroup label="📋 Danh sách các Tỉnh / Thành">
+                        <optgroup label="Danh sách các Tỉnh / Thành">
                           <option value="An Giang">An Giang</option>
                           <option value="Bến Tre">Bến Tre</option>
                           <option value="Bình Định">Bình Định</option>
@@ -1102,7 +1155,7 @@ export default function Home() {
 
                     <div className="partner-form-btns">
                       <button className="btn-submit-partner" type="submit" disabled={submittingPartner}>
-                        {submittingPartner ? "Đang gửi thông tin..." : "⚡ Đăng Ký Hợp Tác Ngay →"}
+                        {submittingPartner ? "Đang gửi thông tin..." : "Đăng Ký Hợp Tác Ngay →"}
                       </button>
                     </div>
                   </form>
@@ -1149,9 +1202,9 @@ export default function Home() {
               <button onClick={openBooking}>Đặt lịch trải nghiệm ngay →</button>
             </section>
             <div className="principles">
-              <div><span>📅</span><b>Lịch rõ ràng</b><small>Theo mùa & thời tiết</small></div>
-              <div><span>👥</span><b>Quy mô phù hợp</b><small>Đảm bảo an toàn</small></div>
-              <div><span>🤝</span><b>Phối hợp kỹ</b><small>Thống nhất trước</small></div>
+              <div><b>Lịch rõ ràng</b><small>Theo mùa & thời tiết</small></div>
+              <div><b>Quy mô phù hợp</b><small>Đảm bảo an toàn</small></div>
+              <div><b>Phối hợp kỹ</b><small>Thống nhất trước</small></div>
             </div>
           </>
         )}
@@ -1170,7 +1223,7 @@ export default function Home() {
                     <small>{newsTag(story)}</small>
                     <h2>{story.title}</h2>
                     <p>{story.text}</p>
-                    <span>Đọc trên nabaden.vn ↗</span>
+                    <span>Đọc trên nabaden.vn →</span>
                   </div>
                 </a>
               ))}
@@ -1195,32 +1248,26 @@ export default function Home() {
             </section>
             <div className="contact-list">
               <button onClick={() => changeTab("partner")}>
-                <span>🤝</span>
                 <div><b>Hợp tác phân phối & CTV</b><small>Tuyển đối tác toàn quốc, vốn 0đ, chiết khấu hấp dẫn</small></div>
                 <i>›</i>
               </button>
               <a href="https://maps.app.goo.gl/r8JkWUTPksY2CjsB7" target="_blank" rel="noreferrer">
-                <span>⌖</span>
                 <div><b>Địa chỉ vườn</b><small>Lộ 10, ấp Thạnh Trung, Phường Bình Minh, Tây Ninh</small></div>
                 <i>›</i>
               </a>
               <a href="https://www.facebook.com/nabaden.vn/" target="_blank" rel="noreferrer">
-                <span>f</span>
                 <div><b>Facebook NABADEN</b><small>Cập nhật hoạt động thường nhật</small></div>
                 <i>›</i>
               </a>
               <a href="https://www.tiktok.com/@mangcaubaden" target="_blank" rel="noreferrer">
-                <span>♪</span>
                 <div><b>TikTok @mangcaubaden</b><small>Video từ vườn và quy trình đóng gói</small></div>
                 <i>›</i>
               </a>
               <button onClick={shareApp}>
-                <span>↗</span>
                 <div><b>Chia sẻ ứng dụng</b><small>Gửi NABADEN cho bạn bè & đối tác</small></div>
                 <i>›</i>
               </button>
               <button onClick={requestInstall}>
-                <span>＋</span>
                 <div><b>Cài lên màn hình chính</b><small>Mở nhanh như một ứng dụng điện thoại</small></div>
                 <i>›</i>
               </button>
@@ -1234,8 +1281,8 @@ export default function Home() {
               </div>
             </a>
             <div className="saved-card">
-              <span>♡ {favorites.length} sản phẩm yêu thích</span>
-              <span>◫ {basket.length} yêu cầu đang lưu</span>
+              <span>{favorites.length} sản phẩm yêu thích</span>
+              <span>{basket.length} yêu cầu đang lưu</span>
             </div>
           </>
         )}
@@ -1244,7 +1291,12 @@ export default function Home() {
       {/* Nút Giỏ Quan Tâm */}
       {basket.length > 0 && (
         <button className="basket-fab" onClick={() => setBasketOpen(true)} aria-label={`Mở giỏ quan tâm có ${basket.length} sản phẩm`}>
-          <span>🛒</span><b>{basket.length}</b><em>Giỏ quan tâm</em>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          <b>{basket.length}</b><em>Giỏ quan tâm</em>
         </button>
       )}
 
@@ -1256,7 +1308,7 @@ export default function Home() {
             className={`${tab === item.id ? "active" : ""} ${item.highlight ? "partner-tab" : ""}`}
             onClick={() => changeTab(item.id)}
           >
-            <span>{item.icon}</span>
+            {renderNavIcon(item.id)}
             <small>{item.label}</small>
           </button>
         ))}
@@ -1309,7 +1361,7 @@ export default function Home() {
           </div>
           <div className="support-options">
             <button onClick={() => { setSupportOpen(false); changeTab("partner"); }}>
-              <span className="support-option-icon partner">🤝</span>
+              <span className="support-option-icon partner">HT</span>
               <div>
                 <b>Trở thành đối tác / CTV</b>
                 <small>Tuyển CTV vốn 0đ, nhà phân phối toàn quốc</small>
@@ -1317,7 +1369,7 @@ export default function Home() {
               <i>→</i>
             </button>
             <button onClick={() => { setSupportOpen(false); openBooking(); }}>
-              <span className="support-option-icon booking">🌿</span>
+              <span className="support-option-icon booking">DL</span>
               <div>
                 <b>Đặt lịch hái quả tại vườn</b>
                 <small>Chọn ngày, khung giờ và số khách tham quan</small>
@@ -1334,7 +1386,7 @@ export default function Home() {
             </a>
             {!isInstalled ? (
               <button onClick={() => { setSupportOpen(false); void requestInstall(); }}>
-                <span className="support-option-icon">＋</span>
+                <span className="support-option-icon">+</span>
                 <div>
                   <b>Cài ứng dụng NABADEN</b>
                   <small>Thêm vào màn hình chính để mở nhanh</small>
@@ -1343,7 +1395,7 @@ export default function Home() {
               </button>
             ) : (
               <div className="support-installed">
-                <span>✓</span>
+                <span>•</span>
                 <div>
                   <b>Ứng dụng đã được cài đặt</b>
                   <small>Bạn đang sử dụng NABADEN như một ứng dụng</small>
@@ -1360,7 +1412,6 @@ export default function Home() {
           {bookingMessage ? (
             <div className="booking-ready">
               <div className="booking-ready-title">
-                <span>✓</span>
                 <div>
                   <b>Tin nhắn đã được sao chép</b>
                   <small>Hãy dán nội dung này vào cuộc trò chuyện Zalo OA.</small>
@@ -1415,7 +1466,7 @@ export default function Home() {
         </Modal>
       )}
 
-      {toast && <div className="toast">✓ {toast}</div>}
+      {toast && <div className="toast">{toast}</div>}
     </main>
   );
 }
@@ -1458,9 +1509,9 @@ function ProductCard({
     <article className={`product-card ${compact ? "compact" : ""}`}>
       <div className="product-image">
         <img src={product.image} alt={product.name} />
-        {product.ocop && <span className="product-badge-ocop">OCOP 3★</span>}
+        {product.ocop && <span className="product-badge-ocop">OCOP 3 SAO</span>}
         <button onClick={() => onFavorite(product.id)} aria-label={favorite ? "Bỏ yêu thích" : "Thêm yêu thích"}>
-          {favorite ? "♥" : "♡"}
+          {favorite ? "Đã lưu" : "Lưu"}
         </button>
       </div>
       <div className="product-info">
@@ -1475,7 +1526,7 @@ function ProductCard({
             className={`product-btn-add ${inBasket ? "selected" : ""}`}
             onClick={() => onBasket(product.id)}
           >
-            {inBasket ? "✓ Trong giỏ quan tâm" : "+ Quan tâm tư vấn"}
+            {inBasket ? "Đã thêm quan tâm" : "+ Thêm quan tâm"}
           </button>
         </div>
       </div>
