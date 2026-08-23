@@ -391,8 +391,20 @@ export default function MangCauRipeningArticlePage() {
 
               <h3>7. Múi thịt dễ tách và dẻo ngọt</h3>
               <p>
-                Khi tách quả ra, phần thịt mãng cầu có màu trắng đục dẻo dai, múi mọng nước thơm ngọt và hạt tách dể dàng.
+                Khi tách quả ra, phần thịt mãng cầu có màu trắng đục dẻo dai, múi mọng nước thơm ngọt và hạt đen tách dể dàng.
               </p>
+
+              <figure className="article-figure-inline">
+                <img
+                  src="/thit-mang-cau-chin-mui-trang.jpg"
+                  alt="Trái mãng cầu Bà Đen chín tách đôi múi thịt dẻo mọng hạt đen"
+                  loading="lazy"
+                  style={{ maxHeight: "550px", objectFit: "cover", width: "100%", borderRadius: "16px" }}
+                />
+                <figcaption>
+                  Thịt mãng cầu Bà Đen khi chín vừa đạt có màu trắng đục dẻo dính, hương thơm nức và vị ngọt đậm thanh mát.
+                </figcaption>
+              </figure>
 
               <h2 id="chin-khong-deu">4. Mãng cầu chín không đồng loạt có bình thường không?</h2>
               <p>
