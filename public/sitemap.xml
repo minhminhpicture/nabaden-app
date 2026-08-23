@@ -160,8 +160,18 @@
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
     <image:image>
-      <image:loc>https://mangcaubaden.vn/trai-mang-cau-chin-gia-tren-tay.jpg</image:loc>
+      <image:loc>https://mangcaubaden.vn/vuon-mang-cau-nui-ba-den-troi-xanh.jpg</image:loc>
       <image:title>Mãng cầu và quả na có phải là một? Phân biệt na dai, na bở và mãng cầu Bà Đen</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://mangcaubaden.vn/mang-cau-bao-lau-thi-chin/</loc>
+    <lastmod>2026-08-23T09:00:00+07:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://mangcaubaden.vn/mang-cau-ba-den-chin-vang-bo-xop.jpg</image:loc>
+      <image:title>Mãng cầu bao lâu thì chín? Cách nhận biết mãng cầu chín ngon</image:title>
     </image:image>
   </url>
 </urlset>
