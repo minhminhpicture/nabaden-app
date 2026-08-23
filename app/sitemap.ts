@@ -118,5 +118,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 0.95,
     },
+    {
+      url: `${siteUrl}/mang-cau-va-qua-na-co-phai-la-mot/`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${siteUrl}/tin-tuc/mang-cau-va-qua-na-co-phai-la-mot/`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${siteUrl}/mang-cau-bao-lau-thi-chin/`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
+    {
+      url: `${siteUrl}/tin-tuc/mang-cau-bao-lau-thi-chin/`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.95,
+    },
   ];
 }
