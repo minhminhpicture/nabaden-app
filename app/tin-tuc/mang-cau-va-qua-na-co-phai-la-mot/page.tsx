@@ -195,8 +195,8 @@ export default function NaVsMangCauArticlePage() {
         </nav>
 
         <div className="header-actions">
-          <a className="header-cta" href="tel:0833184106">
-            <span>0833 184 106</span>
+          <a className="header-cta" href="tel:0907215521">
+            <span>0907 215 521</span>
             <span className="cta-arrow">↗</span>
           </a>
         </div>
@@ -463,8 +463,8 @@ export default function NaVsMangCauArticlePage() {
                   <Link href="/san-pham" className="callout-btn primary">
                     Khám phá các dòng sản phẩm ➔
                   </Link>
-                  <a href="tel:0833184106" className="callout-btn secondary">
-                    Hotline đặt hàng: 0833 184 106
+                  <a href="tel:0907215521" className="callout-btn secondary">
+                    Hotline đặt hàng: 0907 215 521
                   </a>
                 </div>
               </div>

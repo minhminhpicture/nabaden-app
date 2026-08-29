@@ -25,9 +25,9 @@ test("server-renders the NABADEN mobile app", async () => {
   assert.match(html, /Tin tức/);
   assert.match(html, /Trải nghiệm/);
   assert.match(html, /<a href="https:\/\/mangcaubaden\.vn">Mãng cầu Bà Đen<\/a>/);
-  assert.match(html, /https:\/\/zalo\.me\/0833184106/);
-  assert.match(html, /"telephone":"\+84 833 184 106"/);
-  assert.doesNotMatch(html, /0907215521|0907 215 521|2227000692046430780/);
+  assert.match(html, /https:\/\/zalo\.me\/0907215521/);
+  assert.match(html, /"telephone":"\+84 907 215 521"/);
+  assert.doesNotMatch(html, /0833184106|0833 184 106|2227000692046430780/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
 });
 
@@ -43,8 +43,8 @@ test("news route synchronizes articles from nabaden.vn", async () => {
   assert.match(route, /\/tin-tuc\/\$\{article\.id\}\//);
   assert.match(page, /fetch\("\/api\/news"/);
   assert.match(page, /fallbackStories/);
-  assert.match(page, /HOTLINE_PHONE = "0833184106"/);
-  assert.match(page, /HOTLINE_DISPLAY = "0833 184 106"/);
-  assert.match(layout, /telephone: "\+84 833 184 106"/);
+  assert.match(page, /HOTLINE_PHONE = "0907215521"/);
+  assert.match(page, /HOTLINE_DISPLAY = "0907 215 521"/);
+  assert.match(layout, /telephone: "\+84 907 215 521"/);
   assert.doesNotMatch(page, /Tự động cập nhật|Đang cập nhật|news-sync/);
 });

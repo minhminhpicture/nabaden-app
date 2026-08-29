@@ -201,8 +201,8 @@ export default function MangCauRipeningArticlePage() {
         </nav>
 
         <div className="header-actions">
-          <a className="header-cta" href="tel:0833184106">
-            <span>0833 184 106</span>
+          <a className="header-cta" href="tel:0907215521">
+            <span>0907 215 521</span>
             <span className="cta-arrow">↗</span>
           </a>
         </div>
@@ -492,8 +492,8 @@ export default function MangCauRipeningArticlePage() {
                   <Link href="/san-pham" className="callout-btn primary">
                     Đặt hàng sản phẩm ➔
                   </Link>
-                  <a href="tel:0833184106" className="callout-btn secondary">
-                    Hotline: 0833 184 106
+                  <a href="tel:0907215521" className="callout-btn secondary">
+                    Hotline: 0907 215 521
                   </a>
                 </div>
               </div>
