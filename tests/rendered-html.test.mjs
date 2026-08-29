@@ -25,13 +25,17 @@ test("server-renders the NABADEN mobile app", async () => {
   assert.match(html, /Tin tức/);
   assert.match(html, /Trải nghiệm/);
   assert.match(html, /<a href="https:\/\/mangcaubaden\.vn">Mãng cầu Bà Đen<\/a>/);
+  assert.match(html, /https:\/\/zalo\.me\/0833184106/);
+  assert.match(html, /"telephone":"\+84 833 184 106"/);
+  assert.doesNotMatch(html, /0907215521|0907 215 521|2227000692046430780/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/i);
 });
 
 test("news route synchronizes articles from nabaden.vn", async () => {
-  const [route, page] = await Promise.all([
+  const [route, page, layout] = await Promise.all([
     readFile(new URL("../app/api/news/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(route, /https:\/\/nabaden\.vn\/news-data\.js/);
@@ -39,5 +43,8 @@ test("news route synchronizes articles from nabaden.vn", async () => {
   assert.match(route, /\/tin-tuc\/\$\{article\.id\}\//);
   assert.match(page, /fetch\("\/api\/news"/);
   assert.match(page, /fallbackStories/);
+  assert.match(page, /HOTLINE_PHONE = "0833184106"/);
+  assert.match(page, /HOTLINE_DISPLAY = "0833 184 106"/);
+  assert.match(layout, /telephone: "\+84 833 184 106"/);
   assert.doesNotMatch(page, /Tự động cập nhật|Đang cập nhật|news-sync/);
 });

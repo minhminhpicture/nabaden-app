@@ -199,8 +199,8 @@ export default function CultureArticlePage() {
         </nav>
 
         <div className="header-actions">
-          <a className="header-cta" href="tel:0907215521">
-            <span>0907 215 521</span>
+          <a className="header-cta" href="tel:0833184106">
+            <span>0833 184 106</span>
             <span className="cta-arrow">↗</span>
           </a>
         </div>
@@ -506,8 +506,8 @@ export default function CultureArticlePage() {
                   <Link href="/san-pham" className="callout-btn primary">
                     Xem danh mục sản phẩm ➔
                   </Link>
-                  <a href="tel:0907215521" className="callout-btn secondary">
-                    Tư vấn dâng lễ: 0907 215 521
+                  <a href="tel:0833184106" className="callout-btn secondary">
+                    Tư vấn dâng lễ: 0833 184 106
                   </a>
                 </div>
               </div>

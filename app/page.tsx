@@ -17,10 +17,10 @@ type NewsStory = {
   href: string;
 };
 
-const ZALO_OA_URL = "https://zalo.me/2227000692046430780";
-const PARTNER_ZALO_URL = "https://zalo.me/2227000692046430780?open_type=p&open_form=4fac32860ec3e79dbed2";
-const HOTLINE_PHONE = "0907215521";
-const HOTLINE_DISPLAY = "0907 215 521";
+const ZALO_OA_URL = "https://zalo.me/0833184106";
+const PARTNER_ZALO_URL = ZALO_OA_URL;
+const HOTLINE_PHONE = "0833184106";
+const HOTLINE_DISPLAY = "0833 184 106";
 
 const products = [
   {
@@ -241,7 +241,7 @@ const productFaqs = [
   },
   {
     q: "Làm sao để nhận báo giá sỉ hoặc đăng ký làm CTV / Đại lý?",
-    a: "Quý khách vui lòng bấm sang tab 'Hợp tác' trên ứng dụng để gửi thông tin đăng ký, hoặc gọi trực tiếp Hotline 0907 215 521 / nhắn tin Zalo OA để nhận bảng giá sỉ & ưu đãi chiết khấu mới nhất hôm nay.",
+    a: "Quý khách vui lòng bấm sang tab 'Hợp tác' trên ứng dụng để gửi thông tin đăng ký, hoặc gọi trực tiếp Hotline 0833 184 106 / nhắn tin Zalo để nhận bảng giá sỉ & ưu đãi chiết khấu mới nhất hôm nay.",
   },
 ];
 
@@ -559,7 +559,7 @@ export default function Home() {
 
     const vnPhoneRegex = /^0(3|5|7|8|9)[0-9]{8}$/;
     if (!vnPhoneRegex.test(phoneVal)) {
-      notify("Số điện thoại Zalo không hợp lệ. Vui lòng nhập 10 chữ số (ví dụ: 0907215521)");
+      notify("Số điện thoại Zalo không hợp lệ. Vui lòng nhập 10 chữ số (ví dụ: 0833184106)");
       return;
     }
 
@@ -1068,7 +1068,7 @@ export default function Home() {
 
                     <label>
                       Số điện thoại (có Zalo) *
-                      <input name="phone" required inputMode="tel" placeholder="Ví dụ: 0907 215 521" />
+                      <input name="phone" required inputMode="tel" placeholder="Ví dụ: 0833 184 106" />
                     </label>
 
                     <label>

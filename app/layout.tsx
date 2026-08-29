@@ -2,6 +2,24 @@ import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import "./globals.css";
 
+const contactSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://app.nabaden.vn/#organization",
+  name: "NABADEN",
+  url: "https://app.nabaden.vn/",
+  logo: "https://app.nabaden.vn/logo.png",
+  telephone: "+84 833 184 106",
+  sameAs: ["https://zalo.me/0833184106"],
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: "+84 833 184 106",
+    contactType: "customer service",
+    areaServed: "VN",
+    availableLanguage: "Vietnamese",
+  },
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
   const host = requestHeaders.get("x-forwarded-host") || requestHeaders.get("host") || "localhost:3000";
@@ -45,5 +63,15 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="vi"><body>{children}</body></html>;
+  return (
+    <html lang="vi">
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
+        />
+        {children}
+      </body>
+    </html>
+  );
 }
