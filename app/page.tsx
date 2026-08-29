@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 type TabId = "home" | "products" | "partner" | "experience" | "news" | "contact";
 type InstallEvent = Event & {
@@ -21,6 +21,27 @@ const ZALO_OA_URL = "https://zalo.me/0907215521";
 const PARTNER_ZALO_URL = ZALO_OA_URL;
 const HOTLINE_PHONE = "0907215521";
 const HOTLINE_DISPLAY = "0907 215 521";
+
+const TRUSTED_DOMAINS = ["zalo.me", "nabaden.vn", "mangcaubaden.vn", "app.nabaden.vn"];
+
+function sanitizeInput(str: string, maxLength = 250): string {
+  return str.replace(/<[^>]*>?/gm, "").substring(0, maxLength).trim();
+}
+
+function safeOpenUrl(urlStr: string) {
+  try {
+    const parsed = new URL(urlStr);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return;
+    const isTrusted = TRUSTED_DOMAINS.some(
+      (domain) => parsed.hostname === domain || parsed.hostname.endsWith("." + domain)
+    );
+    if (isTrusted) {
+      window.open(parsed.toString(), "_blank", "noopener,noreferrer");
+    }
+  } catch {
+    // Ignore malformed URLs
+  }
+}
 
 const products = [
   {
@@ -521,16 +542,32 @@ export default function Home() {
   const submitBooking = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+
+    // Anti-Spam Honeypot
+    if (String(data.get("website_hp") || "").trim()) return;
+
+    // Rate Limiting
+    const nowTs = Date.now();
+    if (nowTs - lastSubmitRef.current < 10000) {
+      notify("Thao tác quá nhanh. Vui lòng thử lại sau ít giây.");
+      return;
+    }
+    lastSubmitRef.current = nowTs;
+
+    const name = sanitizeInput(String(data.get("name") || ""));
+    const phone = sanitizeInput(String(data.get("phone") || ""));
+    const note = sanitizeInput(String(data.get("note") || "Không có"));
+
     const body = [
       "Xin chào NABADEN, tôi muốn đặt lịch trải nghiệm hái quả tại vườn:",
-      `Họ tên: ${data.get("name")}`,
-      `Điện thoại: ${data.get("phone")}`,
+      `Họ tên: ${name}`,
+      `Điện thoại: ${phone}`,
       `Ngày dự kiến: ${data.get("date") || "Chưa chốt"}`,
       `Khung giờ: ${data.get("time")}`,
       `Số người lớn: ${data.get("adults")}`,
       `Số trẻ em: ${data.get("children")}`,
       `Nhu cầu: ${data.get("program")}`,
-      `Ghi chú: ${data.get("note") || "Không có"}`,
+      `Ghi chú: ${note}`,
     ].join("\n");
     setBookingMessage(body);
     try {
@@ -1028,6 +1065,14 @@ export default function Home() {
                   </div>
 
                   <form className="partner-form" onSubmit={submitPartnerForm}>
+                    <input
+                      type="text"
+                      name="website_hp"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      style={{ display: "none", position: "absolute", left: "-9999px" }}
+                    />
                     <label>
                       Bạn muốn đăng ký theo hình thức: *
                       <div className="form-role-select-grid">
@@ -1403,6 +1448,14 @@ export default function Home() {
             </div>
           ) : (
             <form className="booking-form" onSubmit={submitBooking}>
+              <input
+                type="text"
+                name="website_hp"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ display: "none", position: "absolute", left: "-9999px" }}
+              />
               <label>Họ và tên *<input name="name" required placeholder="Tên người liên hệ" /></label>
               <label>Số điện thoại *<input name="phone" required inputMode="tel" placeholder="09xx xxx xxx" /></label>
               <div>

@@ -46,6 +46,12 @@ export async function generateMetadata(): Promise<Metadata> {
         alt: "NABADEN - Tìm đối tác phân phối mãng cầu Bà Đen",
       }],
     },
+    referrer: "strict-origin-when-cross-origin",
+    other: {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+    },
     twitter: {
       card: "summary_large_image",
       title: "NABADEN · Mãng cầu Bà Đen",
